@@ -178,3 +178,7 @@ Xem [hướng dẫn thiết lập Render, Neon và bảng Thiên Chủ](docs/REN
 ### Tiến trình kỹ năng
 
 Tân thủ chỉ có chiêu cơ bản. Chiêu thứ hai mở ở cấp tu hành 5; chiêu thứ ba ở cấp 11 và cảnh giới thứ hai; tuyệt kỹ ở cấp 31 và cảnh giới thứ tư. Cấp tu hành = cảnh giới × 10 + tầng hiện tại. Mỗi cấp tăng thêm 1 điểm kỹ năng, mỗi lần lên cảnh giới cộng thêm 2 điểm. Thanh kỹ năng hiển thị điều kiện khóa và cho nâng từng chiêu tối đa 5 bậc, mỗi bậc thêm 12% sát thương. Máy chủ kiểm tra cả mở khóa, điểm nâng và hồi chiêu; tự chiến chỉ chọn chiêu đã mở. Tiến trình cũ không cần xóa và điểm được tính từ cấp tu hành hiện có.
+
+### Chợ, giftcode và nạp tiền
+
+Có chợ trang bị giữa người chơi với tìm kiếm/lịch sử, giftcode do admin phát hành, chuyển khoản do admin duyệt và payOS tự động. Xem [hướng dẫn vận hành và cấu hình payOS trên Render](docs/COMMERCE-PAYOS.md). Các chức năng thu tiền chỉ mở sau khi bạn cấu hình ngân hàng hoặc khóa payOS.

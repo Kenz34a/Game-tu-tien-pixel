@@ -7,6 +7,7 @@ import {questProgress} from '@/lib/rpg/model';
 import type {PanelName} from './panels';
 import type {GameData} from './game';
 const primary:Array<{id:PanelName;icon:number;name:string}>=[
+ {id:'market',icon:30,name:'Chợ'},{id:'giftcodes',icon:19,name:'Giftcode'},{id:'topup',icon:30,name:'Nạp ngọc'},
  {id:'quests',icon:16,name:'Nhiệm vụ'},{id:'maps',icon:18,name:'Bản đồ'},
  {id:'events',icon:39,name:'Thiên địa'},{id:'dungeons',icon:27,name:'Phụ bản'},
  {id:'party',icon:23,name:'Đồng đạo'},{id:'guilds',icon:22,name:'Tông môn'},

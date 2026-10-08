@@ -33,6 +33,7 @@ jobs:
           node /tmp/titles-test.mjs
       - run: npm run build
       - run: npm run db:migrate
+      - run: node tests/d1-commerce-smoke.mjs
       - name: Multiplayer, quest tracking and story continuation smoke tests
         run: |
           npm start >/tmp/rpg-smoke-server.log 2>&1 &
@@ -74,3 +75,5 @@ jobs:
           node /tmp/postgres-sql-test.mjs
       - run: npm run build:render
       - run: node tests/postgres-admin-smoke.mjs
+        env:
+          COMMERCE_CHECKOUT_TEST: "1"
