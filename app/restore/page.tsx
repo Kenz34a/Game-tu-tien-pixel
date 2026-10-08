@@ -1,7 +1,7 @@
 export default async function Restore({searchParams}:{searchParams:Promise<{error?:string}>}) {
   const {error} = await searchParams;
-  return <main style={{minHeight:'100dvh',display:'grid',placeItems:'center',padding:20,background:'#111611',color:'#d9c995'}}>
-    <div className="r-panel" style={{width:'min(440px,100%)',padding:28}}>
+  return <main className="r-entry" style={{minHeight:'100dvh',display:'grid',placeItems:'center',padding:20,color:'#d9c995'}}>
+    <div className="r-panel r-entry-card" style={{width:'min(440px,100%)',padding:28}}>
       <h1 style={{fontSize:26}}>Trở lại tiên lộ</h1>
       <p style={{margin:'16px 0'}}>Nhập mã khôi phục riêng do chủ game cung cấp để tiếp tục nhân vật đã chuyển sang máy chủ này.</p>
       {error&&<p role="alert" style={{color:'#f2a18a'}}>Mã chưa đúng. Hãy kiểm tra lại.</p>}

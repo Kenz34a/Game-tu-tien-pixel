@@ -76,3 +76,9 @@ Vinext/React, Cloudflare Workers runtime local (Wrangler/Miniflare) và D1 tươ
 GitHub lưu mã nguồn; để game chạy liên tục cần một dịch vụ hosting đang hoạt động. Có thể dùng Cloudflare Workers/D1 với tài khoản của bạn: tạo D1, thay `database_id` trong `wrangler.jsonc`, chạy `npx wrangler d1 migrations apply DB --remote --config wrangler.jsonc`, build rồi deploy `dist/server/wrangler.json`. ID D1 mặc định trong repo chỉ dùng cho local. Repository có workflow GitHub Actions để kiểm tra TypeScript, build và migration; workflow không tự triển khai hay cần secret.
 
 Hình ảnh nằm trong `public/art`, `public/rpg`, `public/ui`; sprite/animation ở `lib/rpg/pixels.ts`, `dharma-art.ts`, `scenery.ts`. Font và giấy phép được giữ trong `public/fonts`.
+
+## Chương mở đầu: Phong ấn Thanh Vân
+
+Map đầu yên bình cho tới khi hoàn thành lời thề ở bia cổ. Gặp Lâm Thanh Huyền ở sân giữa để tự nhận chương I; nhận thưởng sẽ tự mở chương kế tiếp. Năm chương dẫn qua trò chuyện, 3 Thanh Tâm Thảo, bia cổ, 3 Thanh Linh Hồ rồi boss trấn thủ. Ba quái xuất hiện sau chương III, boss sau chương IV; hoàn thành chương V mở lại đầy đủ quái của map. Phụ bản giữ cơ chế quái riêng. ID nhiệm vụ cũ được giữ để tương thích nhân vật đã lưu.
+
+Màn tiên môn dùng phiên nhân vật hiện có; đây không phải đăng nhập bằng mật khẩu. `/restore` vẫn dùng mã khôi phục riêng. Nhạc nền ngũ cung được tổng hợp bằng Web Audio, không cần tải nhạc ngoài; bật/tắt ở nút âm thanh, tự tạm dừng khi ẩn tab. Nhân vật có chuyển động thở và đung đưa khi đứng yên.

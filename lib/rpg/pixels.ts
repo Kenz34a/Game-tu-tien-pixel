@@ -70,7 +70,7 @@ export function drawActor(c:CanvasRenderingContext2D,x:number,y:number,time:numb
  const sprite=atlasSprite(frame,hue);if(!sprite){drawActorProcedural(c,x,y,time,s,scale);return;}
  c.save();c.translate(Math.round(x),Math.round(y));c.scale(scale,scale);c.imageSmoothingEnabled=false;
  // Full pose frames for sword cultivators, with animated cloth and footfall.
- const bob=s.moving?step:Math.floor(time/800+seed)%2*.35,flip=s.facing===2||(npc&&Math.floor(seed/24)%2===1);
+ const idle=Math.sin(time/850+seed);if(!s.moving&&!s.attack){c.rotate(idle*.022);c.scale(1,1+Math.sin(time/1100+seed)*.012);}const bob=s.moving?step:idle*.65,flip=s.facing===2||(npc&&Math.floor(seed/24)%2===1);
  if(flip)c.scale(-1,1);c.drawImage(sprite,-36,-55-bob,72,56);
  // Each NPC also carries an individual insignia and stance ornament.
  if(npc&&seed>=12){const trim=trims[Math.floor(seed/12)%6];rect(c,-1,-21,2,2,trim);if(seed%3===0){line(c,-4,-20,-7-Math.sin(time/650+seed)*2,-12,trim);}}
