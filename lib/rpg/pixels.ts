@@ -1,3 +1,4 @@
+import {actorMotion} from './actor-motion';
 // Original pixel sprites, painted on integer coordinates. Each NPC combines its
 // own pose, silhouette, hair, headpiece, outfit pattern, palette and weapon.
 const tones=['#77565e','#536c7b','#5c786a','#6a5884','#94744d','#765975','#485e76','#85665b','#457b7b','#936769','#76845c','#5f647c'];
@@ -70,8 +71,11 @@ export function drawActor(c:CanvasRenderingContext2D,x:number,y:number,time:numb
  const sprite=atlasSprite(frame,hue);if(!sprite){drawActorProcedural(c,x,y,time,s,scale);return;}
  c.save();c.translate(Math.round(x),Math.round(y));c.scale(scale,scale);c.imageSmoothingEnabled=false;
  // Full pose frames for sword cultivators, with animated cloth and footfall.
- const idle=Math.sin(time/850+seed);if(!s.moving&&!s.attack){c.rotate(idle*.022);c.scale(1,1+Math.sin(time/1100+seed)*.012);}const bob=s.moving?step:idle*.65,flip=s.facing===2||(npc&&Math.floor(seed/24)%2===1);
- if(flip)c.scale(-1,1);c.drawImage(sprite,-36,-55-bob,72,56);
+ const rig=actorMotion(time,seed,s.moving,s.attack),flip=s.facing===2||(npc&&Math.floor(seed/24)%2===1);
+ if(flip)c.scale(-1,1);c.rotate(rig.sway);
+ // Layered strips let the robe and hair move independently of the grounded feet.
+ for(let row=0;row<16;row++){const sy=row*8,weight=Math.sin(row/15*Math.PI),cloth=rig.cloth*weight,breath=rig.breath*(1-row/15),stride=rig.stride*Math.max(0,(row-10)/5);c.drawImage(sprite,0,sy,192,8,-36+cloth+stride,-55+row*3.5-breath,72,3.65);}
+ if(time>0&&!s.moving&&!s.attack){const color=npc?'#c6d8a2':['#d5c48d','#93d6b2','#95d8e8','#ef9f88','#d6c69c','#b8a0e7','#addef6','#99e0d2'][(s.root||0)%8];c.globalAlpha=.45;for(let i=0;i<3;i++){const a=time/900+seed+i*2.1;c.fillStyle=color;c.fillRect(Math.cos(a)*22,-16-((time/45+i*17+seed)%42),1.2,1.2);}c.globalAlpha=1;}
  // Each NPC also carries an individual insignia and stance ornament.
  if(npc&&seed>=12){const trim=trims[Math.floor(seed/12)%6];rect(c,-1,-21,2,2,trim);if(seed%3===0){line(c,-4,-20,-7-Math.sin(time/650+seed)*2,-12,trim);}}
  c.restore();

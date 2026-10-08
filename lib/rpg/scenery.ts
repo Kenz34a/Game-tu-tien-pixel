@@ -1,5 +1,6 @@
+import {drawStarterVillage} from './starter-art';
 // Original pixel props make each map's biome and layout distinct.
-export function drawScenery(c:CanvasRenderingContext2D,mapId:number,time:number){if(mapId===0)return;const biome=mapId%18,seed=mapId*7919+113;const tile=(x:number,y:number,w:number,h:number,color:string)=>{c.fillStyle=color;c.fillRect(Math.round(x),Math.round(y),w,h);};
+export function drawScenery(c:CanvasRenderingContext2D,mapId:number,time:number){if(mapId===0){drawStarterVillage(c,time);return;}const biome=mapId%18,seed=mapId*7919+113;const tile=(x:number,y:number,w:number,h:number,color:string)=>{c.fillStyle=color;c.fillRect(Math.round(x),Math.round(y),w,h);};
  for(let i=0;i<18;i++){const edge=i%2===0,x=edge?325+(seed+i*157)%850:360+(seed+i*211)%820,y=edge?340+(i%3)*9:810+(i%3)*8;
   if([1,6,9].includes(biome)){for(let j=0;j<3;j++){const h=22+(seed+i+j*7)%27;tile(x+j*5,y-h,2,h,'#527d59');for(let k=1;k<4;k++){tile(x+j*5-5,y-k*h/4,12,2,'#92a572');tile(x+j*5,y-k*h/4-4,6,2,'#709970');}}}
   else if([4,8,11].includes(biome)){const col=biome===11?'#bb91b9':'#b5d4d4';for(let j=0;j<3;j++){const h=15+(i*7+j*4)%22;tile(x+j*7,y-h,5,h,col);tile(x+j*7+1,y-h-3,3,4,'#e0e7cf');tile(x+j*7+3,y-h+4,2,h-4,'#6b9cae');}}

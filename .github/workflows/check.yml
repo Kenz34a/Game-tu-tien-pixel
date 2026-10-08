@@ -17,6 +17,8 @@ jobs:
         run: |
           ./node_modules/.bin/esbuild tests/opening-story.test.ts --bundle --platform=node --format=esm --outfile=/tmp/opening-story-test.mjs
           node /tmp/opening-story-test.mjs
+          ./node_modules/.bin/esbuild tests/actor-motion.test.ts --bundle --platform=node --format=esm --outfile=/tmp/actor-motion-test.mjs
+          node /tmp/actor-motion-test.mjs
           ./node_modules/.bin/esbuild tests/expansion.test.ts --bundle --platform=node --format=esm --outfile=/tmp/expansion-test.mjs
           node /tmp/expansion-test.mjs
           ./node_modules/.bin/esbuild tests/meridians-codex.test.ts --bundle --platform=node --format=esm --outfile=/tmp/meridians-codex-test.mjs
@@ -25,7 +27,7 @@ jobs:
           node /tmp/titles-test.mjs
       - run: npm run build
       - run: npm run db:migrate
-      - name: Authenticated chat and quest tracking smoke tests
+      - name: Multiplayer, quest tracking and story continuation smoke tests
         run: |
           npm start >/tmp/rpg-smoke-server.log 2>&1 &
           rpg_server_pid=$!
@@ -36,3 +38,4 @@ jobs:
           done
           node tests/chat-smoke.mjs
           node tests/quest-journal-smoke.mjs
+          node tests/starter-tail-smoke.mjs

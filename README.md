@@ -54,7 +54,7 @@ Bản Sites hiện tại được giữ nguyên làm bản dự phòng. `docs/si
 ## Nội dung
 
 - 54 linh địa thuộc Hạ giới, Tiên giới, Thần giới; 108 NPC.
-- 714 nhiệm vụ, gồm 65 nhiệm vụ ẩn; 756 yêu thú/boss trấn thủ và 3 boss thế giới.
+- 717 nhiệm vụ, gồm 65 nhiệm vụ ẩn; 756 yêu thú/boss trấn thủ và 3 boss thế giới.
 - 45 cảnh giới, mỗi cảnh giới 10 tinh; đột phá và độ kiếp có xác suất, Hộ Kiếp Đan và cơ chế tăng may mắn sau thất bại.
 - 6 con đường tu, 6 huyết mạch, 8 linh căn với 5 phẩm; 16 ô trang bị, 8 phẩm, luyện khí và cường hóa.
 - 24 pet, 18 thú cưỡi, 8 danh hiệu, 60 thành tích, tân thủ, tông môn/gia tộc, 72 bí tịch/cổ tịch/truyền thừa, đạo lữ NPC trưởng thành.
@@ -71,7 +71,7 @@ Bấm đất hoặc dùng WASD/phím mũi tên để di chuyển. Bấm NPC đ�
 
 Vinext/React, Cloudflare Workers runtime local (Wrangler/Miniflare) và D1 tương thích SQLite. API `/api/rpg` kiểm tra khoảng cách, hồi chiêu, tài nguyên, cảnh giới, đóng góp và quyền nhận thưởng. Đồng bộ HTTP khoảng 1,4 giây, có phản hồi nhẹ và tạm dừng khi tab ẩn. Header danh tính Sites không được dùng làm thông tin đăng nhập trong runtime độc lập.
 
-Đây là MMORPG nhỏ, chưa kiểm thử tải đông người, chưa có PvP hay anti-cheat chuyên dụng. Quái thường và phụ bản cá nhân thuộc tiến trình nhân vật; boss thế giới và tổ đội dùng trạng thái chung. Map dùng bốn nền gốc kết hợp màu, thời tiết và bố cục riêng. Nhiệm vụ sinh từ các loại hoạt động, chưa phải 714 cốt truyện viết riêng; NPC/quái dùng mẫu sprite và biến thể. Chưa có lãnh địa chiến, quản lý cấp bậc tông môn hoặc kết đạo lữ giữa người chơi.
+Đây là MMORPG nhỏ, chưa kiểm thử tải đông người, chưa có PvP hay anti-cheat chuyên dụng. Quái thường và phụ bản cá nhân thuộc tiến trình nhân vật; boss thế giới và tổ đội dùng trạng thái chung. Map dùng bốn nền gốc kết hợp màu, thời tiết và bố cục riêng. Nhiệm vụ sinh từ các loại hoạt động, chưa phải 717 cốt truyện viết riêng; NPC/quái dùng mẫu sprite và biến thể. Chưa có lãnh địa chiến, quản lý cấp bậc tông môn hoặc kết đạo lữ giữa người chơi.
 
 ## Triển khai lâu dài
 
@@ -158,3 +158,7 @@ Giữ một instance dùng disk này; các instance với SQLite riêng không c
 docker build -t van-thien-ky .
 docker run --rm -p 8787:8787 -v cultivation-state:/var/data van-thien-ky
 ```
+
+### Trải nghiệm tân thủ · Nhập Đạo 02
+
+Nhân vật mới xuất hiện tại **Thanh Vân Tân Thôn** và nhận sẵn nhiệm vụ đầu. Khu tân thủ có đèn lồng đung đưa, cánh hoa, linh khí và Tụ Linh Đài; nhân vật/NPC có chuyển động áo tóc và vận khí. Chính tuyến gồm **8 bước**: 5 bước phong ấn Thanh Vân, rồi phục hồi Ngọc Ấn, đến Trúc Lâm và nhận Thanh Vân Kiếm Quyết. Người chơi cũ có thể dùng nút **Về tân thôn** để quay lại mà giữ tiến độ. Nếu chế độ giảm chuyển động đang bật, có nút **Bật animation** ngay trong game.

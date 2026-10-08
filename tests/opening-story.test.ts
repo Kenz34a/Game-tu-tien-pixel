@@ -19,3 +19,12 @@ p.gathered['0:herb']=3;assert.equal(questProgress(p,QUESTS.find(q=>q.id===STORY_
 assert.notDeepEqual(npcPosition(NPCS[0]),npcPosition(NPCS[1]));
 assert.equal(resourceNodes(0)[0].label,'Thanh Tâm Thảo');
 console.log('Opening story: peaceful spawn, chapter prerequisites, enemy unlocks, legacy maps, dungeon, gathering and NPC positions passed.');
+assert.equal(p.storyRituals?.length,0);
+const fresh=newProfile();assert.equal(fresh.mapId,0);assert.equal(fresh.accepted[0],STORY_IDS[0]);assert.equal(fresh.trackedQuestId,STORY_IDS[0]);assert.equal(STORY_IDS.length,8);
+for(const id of STORY_IDS.slice(5))assert(QUESTS.some(q=>q.id===id),'Three authored continuation quests exist');
+const seal=QUESTS.find(q=>q.id==='story-seal')!;assert.equal(questProgress(fresh,seal),0);fresh.storyRituals=['0:seal'];assert.equal(questProgress(fresh,seal),1);assert(!questUnlocked(fresh.claimed,seal),'A ritual cannot bypass the predecessor');
+assert(resourceNodes(0).some(n=>n.id===3&&n.type==='ritual'));assert(!resourceNodes(1).some(n=>n.type==='ritual'),'The ritual is local to the novice village');
+const legacy=newProfile();delete legacy.storyRituals;assert.equal(questProgress(legacy,seal),0,'Older saves without ritual state remain valid');
+const bamboo=QUESTS.find(q=>q.id==='story-bamboo')!;assert.equal(questProgress(fresh,bamboo),0);fresh.visited.push(1);assert.equal(questProgress(fresh,bamboo),1);
+const message=QUESTS.find(q=>q.id==='story-message')!;assert.equal(questProgress(fresh,message),0);fresh.talked.push(2);assert.equal(questProgress(fresh,message),1);assert.equal(message.rewardBook,0);
+console.log('Novice continuation: auto-accepted opening, three sequential quests, map-scoped ritual, legacy saves, travel and NPC objectives passed.');

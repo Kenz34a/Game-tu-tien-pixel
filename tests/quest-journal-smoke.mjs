@@ -4,7 +4,7 @@ let cookie='';
 async function request(body){if(body)await new Promise(r=>setTimeout(r,300));const response=await fetch(base+'/api/rpg',{method:body?'POST':'GET',headers:{...(cookie?{cookie}:{}),...(body?{'content-type':'application/json'}:{})},...(body?{body:JSON.stringify(body)}:{})});cookie=response.headers.get('set-cookie')?.split(';')[0]||cookie;return {status:response.status,data:await response.json()};}
 await request();
 await request({action:'name',name:'QA_JOURNAL_SMOKE'});
-let r=await request({action:'trackQuest',questId:'q0-8'});assert(r.status>=400,'Unaccepted quest must not be tracked');
+let r=await request({action:'trackQuest',questId:'q0-6'});assert(r.status>=400,'Unaccepted quest must not be tracked');
 r=await request({action:'accept',questId:'q0-8'});assert.equal(r.status,200);
 r=await request({action:'trackQuest',questId:'q0-8'});assert.equal(r.data.profile.trackedQuestId,'q0-8');
 r=await request();assert.equal(r.data.profile.trackedQuestId,'q0-8','Tracking must persist across requests');
