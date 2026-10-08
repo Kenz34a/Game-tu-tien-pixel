@@ -130,3 +130,29 @@ Sau khi migrate và khởi động ứng dụng cục bộ trên cổng 8787, ch
 ## Menu chức năng trên HUD
 
 Menu chính có 12 lối tắt và bảng **Thêm** gồm Linh sủng, Tiên duyên, Bí tịch, Đan đạo, Chợ giao dịch, Pháp thân, Động Khiếu, Đạo tâm, Cảnh giới, Nhân vật, Hành trang và Cài đặt. Các mục mở hệ thống gameplay tương ứng. Nhiệm vụ/Nhật khóa hiện số thưởng đã đủ điều kiện và chưa nhận. Bảng Thêm hỗ trợ bàn phím, Escape, đóng khi bấm ra ngoài và bố cục điện thoại; Thiên thư vẫn mở toàn bộ danh mục chức năng.
+
+## Danh hiệu, xếp hạng và chiêu thức
+
+Có **152 danh hiệu**: 8 danh hiệu cũ giữ nguyên ID/điều kiện, 120 danh hiệu theo 10 con đường và 24 danh hiệu Phong Vân. Danh hiệu thường mở theo trảm yêu, boss, khám phá, bí tịch, nhiệm vụ, điều tức, cơ duyên, cổ cảnh tổ đội, thu thập và khai khiếu. Mỗi danh hiệu có màu, bậc, khung tên nhiều lớp với cánh, ngọc, mây cuộn và họa tiết riêng theo hệ; có một trong 6 hiệu ứng: vân khí, kiếm quang, hỏa diễm, tinh hà, thanh liên, lôi quang. Có tìm kiếm không dấu, lọc, phân trang và xem trước; chỉ danh hiệu đang đeo và đủ điều kiện cộng công cơ bản.
+
+Phong Vân chia thành **8 top**: Tu vi, Lực chiến, Trảm yêu, Săn boss, Tiên lộ, Thiên cơ, Chu thiên, Đồng đạo. Mỗi bảng có danh hiệu riêng cho hạng 1/2/3; các bảng thành tích chỉ xếp người có thành tích lớn hơn 0. Khi bằng điểm, ID máy chủ dùng làm thứ tự ổn định. Danh hiệu top là vinh danh tạm thời, không cộng chỉ số; quyền sử dụng cập nhật trong vòng 10 giây và kiểm tra lại ngay khi trang bị. Ra khỏi vị trí tương ứng sẽ mất hiệu ứng dù ID trang bị cũ vẫn được giữ. Nút Trang bị danh hiệu ở hàng của bạn trang bị danh hiệu theo thứ hạng đó.
+
+Chiêu thức có 24 biến thể cho 6 môn phái × 4 chiêu: pháp ấn khi xuất chiêu, vệt bay từ nhân vật tới mục tiêu, va chạm, hào quang và tàn dư. Kiếm tu dùng kiếm khí, pháp tu dùng lôi trận, thể tu dùng cương ấn, quyền tu dùng quyền ảnh, thương tu dùng thương mang, y tu dùng thanh liên. Chế độ giảm chuyển động giữ dấu va chạm tĩnh; sát thương, linh lực và hồi chiêu vẫn do máy chủ quyết định.
+
+```sh
+./node_modules/.bin/esbuild tests/titles.test.ts --bundle --platform=node --format=esm --outfile=/tmp/titles-test.mjs
+node /tmp/titles-test.mjs
+```
+
+## Triển khai Docker / Render
+
+Dockerfile mới build đúng thư mục `dist`; không sao chép `/app/release` hoặc `server-build` không tồn tại. Máy chủ dùng Node 22, áp dụng migration trước khi chạy, nghe trên `0.0.0.0:$PORT`, kiểm tra sức khỏe tại `/api/health` và lưu SQLite theo `RPG_STATE_DIR`.
+
+Trên Render, chọn repository này và nhánh `main`, dùng runtime **Docker**, Dockerfile `./Dockerfile`. Với dịch vụ đã có, cập nhật các thiết lập tương ứng và deploy commit mới. Gắn persistent disk tại `/var/data`, đặt `RPG_STATE_DIR=/var/data/rpg`. File `render.yaml` cung cấp Blueprint cho một dịch vụ có disk; nó chọn gói Starter có phí vì persistent disk cần gói trả phí. Chưa có thao tác tạo dịch vụ hay thu phí được thực hiện từ repository.
+
+Giữ một instance dùng disk này; các instance với SQLite riêng không chia sẻ tiến trình. Không dùng ổ đĩa tạm để giữ nhân vật qua deploy. Có thể kiểm tra Docker tại máy cá nhân bằng:
+
+```sh
+docker build -t van-thien-ky .
+docker run --rm -p 8787:8787 -v cultivation-state:/var/data van-thien-ky
+```

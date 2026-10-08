@@ -21,6 +21,8 @@ jobs:
           node /tmp/expansion-test.mjs
           ./node_modules/.bin/esbuild tests/meridians-codex.test.ts --bundle --platform=node --format=esm --outfile=/tmp/meridians-codex-test.mjs
           node /tmp/meridians-codex-test.mjs
+          ./node_modules/.bin/esbuild tests/titles.test.ts --bundle --platform=node --format=esm --outfile=/tmp/titles-test.mjs
+          node /tmp/titles-test.mjs
       - run: npm run build
       - run: npm run db:migrate
       - name: Authenticated chat smoke test

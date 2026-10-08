@@ -1,0 +1,15 @@
+services:
+  - type: web
+    name: van-thien-ky
+    runtime: docker
+    plan: starter
+    healthCheckPath: /api/health
+    envVars:
+      - key: PORT
+        value: 8787
+      - key: RPG_STATE_DIR
+        value: /var/data/rpg
+    disk:
+      name: cultivation-state
+      mountPath: /var/data
+      sizeGB: 1

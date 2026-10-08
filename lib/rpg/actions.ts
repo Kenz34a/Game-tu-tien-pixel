@@ -1,3 +1,4 @@
+import {rankingHolders} from './leaderboard';
 import {SECRETS,secretProgress,secretKnown} from './secrets';
 import {immortalAction} from './immortal-actions';
 import {partyHit,partyFor} from './parties';
@@ -48,7 +49,7 @@ export async function act(s:Session,before:Profile,body:any,lastSeen:number):Pro
  else if(action==='companionTrain'){const isPet=body.kind==='pet',collection=isPet?p.pets:p.mounts,entry=collection.find(x=>x.id===Number(body.id));requireRule(entry,'Chưa sở hữu linh thú này.');requireRule(entry!.level<25,'Linh thú đã đạt cấp 25.');charge(p,'stone',entry!.level*30);entry!.level++;out.notice='Linh thú tăng lên cấp '+entry!.level;}
  else if(action==='learn'){const book=BOOKS[Number(body.bookId)];requireRule(book,'Bí tịch không tồn tại.');requireRule(p.realm>=book.minRealm,'Cảnh giới chưa đủ để lĩnh ngộ.');requireRule(!p.books.includes(book.id),'Đã lĩnh ngộ bí tịch này.');charge(p,book.kind==='Bí tịch'?'merit':'stone',book.price);if(book.kind==='Truyền thừa'){requireRule(p.heritage<30,'Truyền thừa đã đạt 30 tầng.');requireRule(p.relics>=2,'Cần 2 mảnh truyền thừa.');p.relics-=2;p.heritage++;}p.books.push(book.id);out.notice='Lĩnh ngộ '+book.name+' · lực chiến tăng';}
  else if(action==='heritage'){requireRule(p.relics>=5,'Cần 5 mảnh cổ tịch.');requireRule(p.heritage<30,'Truyền thừa đã đạt 30 tầng.');p.relics-=5;p.heritage++;out.notice='Truyền thừa tăng đến tầng '+p.heritage;}
- else if(action==='title'){requireRule(availableTitles(p).some(t=>t.id===body.titleId),'Chưa đạt yêu cầu danh hiệu.');p.titleId=body.titleId;out.notice='Đã chọn danh hiệu '+TITLES.find(t=>t.id===p.titleId)?.name;}
+ else if(action==='title'){p.rankingTitles=(await rankingHolders(true)).get(s.id)||[];requireRule(availableTitles(p).some(t=>t.id===body.titleId),'Chưa đạt yêu cầu danh hiệu.');p.titleId=body.titleId;out.notice='Đã chọn danh hiệu '+TITLES.find(t=>t.id===p.titleId)?.name;}
  else if(action==='achievement'){const a=ACHIEVEMENTS[Number(body.id)];requireRule(a,'Thành tích không tồn tại.');requireRule(!p.achievements.includes(a.id),'Đã nhận thưởng thành tích.');requireRule(metric(p,a.type)>=a.target,'Chưa đạt yêu cầu thành tích.');p.achievements.push(a.id);p.coins.stone+=a.reward;p.coins.jade++;out.notice='Nhận thưởng thành tích · +'+a.reward+' linh thạch';}
  else if(action==='tutorialReward'){const done=p.tutorial.includes(Number(body.step));requireRule(done,'Hãy hoàn thành bước hướng dẫn.');const key='tutorial-'+Number(body.step);requireRule(!p.eventClaims.includes(key),'Đã nhận thưởng bước này.');p.eventClaims.push(key);p.coins.stone+=40;p.coins.silver+=120;out.notice='Thưởng tân thủ · +40 linh thạch · +120 ngân lượng';}
  else if(action==='guildCreate'){const kind=body.kind==='clan'?'clan':'sect';const name=String(body.name||'').trim();requireRule(name.length>=3&&name.length<=24,'Tên từ 3 đến 24 ký tự.');const member=await db().prepare('SELECT id FROM rpg_members WHERE owner=? AND kind=?').bind(s.id,kind).first();requireRule(!member,'Đã có '+(kind==='sect'?'tông môn':'gia tộc')+'.');const exists=await db().prepare('SELECT id FROM rpg_guilds WHERE name=? AND kind=?').bind(name,kind).first();requireRule(!exists,'Tên đã được dùng.');charge(p,'stone',kind==='clan'?300:500);const id=crypto.randomUUID();out.statements.push(db().prepare('INSERT INTO rpg_guilds(id,kind,name,leader,created_at) VALUES(?,?,?,?,?)').bind(id,kind,name,s.id,now),db().prepare('INSERT INTO rpg_members(id,owner,kind,guild_id) VALUES(?,?,?,?)').bind(s.id+':'+kind,s.id,kind,id));out.notice='Đã thành lập '+name;}
@@ -76,7 +77,7 @@ export async function act(s:Session,before:Profile,body:any,lastSeen:number):Pro
  }}
  if(p.dungeon&&p.dungeon.kills>=3){if(p.dungeon.wave<3){p.dungeon.wave++;p.dungeon.kills=0;p.dungeon.bossSlain=false;p.encounters={};out.notice='Cổ cảnh · đợt '+p.dungeon.wave+'/3';}else if(p.dungeon.bossSlain){const map=p.dungeon.mapId;p.cleared[String(map)]=(p.cleared[String(map)]||0)+1;p.dungeon=null;p.encounters={};p.coins.stone+=120*(1+p.realm);p.coins.jade+=3;p.relics+=2;p.xp+=Math.floor(nextXp(p)*.4);p.cooldowns.dungeon=now+30000;out.notice='PHỤ BẢN HOÀN THÀNH · nhận tiên ngọc và cổ tịch';}}
  if(!out.notice&&out.hits.some(h=>h.dead))out.notice='Đã diệt yêu thú · nhận tu vi và vật phẩm';}
- out.effect={type:'spell',skill:skillId,x:tx,y:ty};
+ out.effect={type:'spell',skill:skillId,x:tx,y:ty,fromX:p.x,fromY:p.y,classId:p.classId,root:p.root};
  }
  else throw new GameError('Thao tác không hợp lệ.');
  return out;
