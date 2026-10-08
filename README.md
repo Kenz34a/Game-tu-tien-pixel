@@ -63,7 +63,7 @@ Bản Sites hiện tại được giữ nguyên làm bản dự phòng. `docs/si
 
 ## Điều khiển
 
-Bấm đất hoặc dùng WASD/phím mũi tên để di chuyển. Bấm NPC để trò chuyện, tài nguyên để thu thập, yêu thú để chọn mục tiêu. Phím 1–4 xuất chiêu, 5 thức tỉnh pháp thân, Q bật/dừng tự chiến, R dùng linh đan, B mở hành trang, M mở map. Thiên thư mở toàn bộ hệ thống.
+Bấm đất hoặc dùng WASD/phím mũi tên để di chuyển. Bấm NPC để trò chuyện, tài nguyên để thu thập, yêu thú để chọn mục tiêu. Phím 1–4 xuất chiêu, 5 thức tỉnh pháp thân, Q bật/dừng tự chiến, R dùng linh đan, B mở hành trang, M mở map, J mở nhật ký, K mở Động Khiếu, P mở nhân vật. Hàng dùng nhanh: R dùng Hồi Linh Đan; 6 mở độ kiếp để chọn Hộ Kiếp Đan; 7 mở đan phòng, 8 mở truyền thừa, 9 mở hành trang. Thiên thư mở toàn bộ hệ thống.
 
 ## Kiến trúc và giới hạn
 

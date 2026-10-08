@@ -3,6 +3,7 @@ import "./globals.css";
 import "./pixel-ui.css";
 import "./rpg.css";
 import "./immortal-ui.css";
+import "./combat-ui.css";
 
 export const metadata: Metadata = {
   title: "Vân Thiên Ký · Tu tiên pixel MMORPG",
