@@ -182,3 +182,7 @@ Tân thủ chỉ có chiêu cơ bản. Chiêu thứ hai mở ở cấp tu hành 
 ### Chợ, giftcode và nạp tiền
 
 Có chợ trang bị giữa người chơi với tìm kiếm/lịch sử, giftcode do admin phát hành, chuyển khoản do admin duyệt và payOS tự động. Xem [hướng dẫn vận hành và cấu hình payOS trên Render](docs/COMMERCE-PAYOS.md). Các chức năng thu tiền chỉ mở sau khi bạn cấu hình ngân hàng hoặc khóa payOS.
+
+### Vạn Bảo Các · Shop
+
+Nút **Shop** mua trang bị, linh đan, nguyên liệu và cổ tịch bằng 5 loại tiền game; **Chợ** vẫn dành cho giao dịch giữa người chơi. Shop có 16 bộ phận và 8 phẩm trang bị, mở theo cảnh giới, giá trang bị theo cấp tu hành. Tiên ngọc dùng ngay từ tân thủ để mua đồ Phàm phẩm, túi hành trang và vật tư tu luyện. Chọn hàng → xác nhận mua; đồ tự vào hành trang hoặc kho nguyên liệu. Giá/gói cố định được kiểm tra trên máy chủ và tiền/vật phẩm lưu cùng transaction. Danh mục, giá và gói quà nằm trong `lib/rpg/shop.ts`, không cần thêm migration database.

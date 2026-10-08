@@ -1,3 +1,4 @@
+import {shopAction} from './shop-actions';
 import {commerceAction} from './commerce';
 import {skillUnlocked,skillLevel,skillCanUpgrade,skillDamageBonus} from './skill-progression';
 import {safeVillage,worldBossPosition} from './map-layout';
@@ -24,6 +25,7 @@ export async function act(s:Session,before:Profile,body:any,lastSeen:number):Pro
  const near=enemiesFor(p,now).filter(e=>e.hp>0&&Math.hypot(e.x-p.x,e.y-p.y)<85);const damage=Math.max(0,near.reduce((sum,e)=>sum+e.attack,0)-st.defense*.08)*elapsed;p.hp=Math.max(0,p.hp-Math.floor(damage));if(p.hp>0&&safeVillage(p))p.hp=Math.min(st.hp,p.hp+Math.floor(elapsed*st.hp*.035));return out;
  }
  requireRule((p.cooldowns.action||0)<now,'Thao tác quá nhanh.');p.cooldowns.action=now+220;
+ if(shopAction(s,body,out))return out;
  if(await commerceAction(s,body,out))return out;
  if(await immortalAction(s,body,out))return out;
  if(action==='name'){const name=String(body.name||'').trim();requireRule(name.length>=2&&name.length<=22,'Đạo danh dài từ 2 đến 22 ký tự.');p.name=name;out.notice='Đạo danh đã được lưu.';}
