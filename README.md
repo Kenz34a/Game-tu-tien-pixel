@@ -52,12 +52,12 @@ Bản Sites hiện tại được giữ nguyên làm bản dự phòng. `docs/si
 ## Nội dung
 
 - 54 linh địa thuộc Hạ giới, Tiên giới, Thần giới; 108 NPC.
-- 702 nhiệm vụ, gồm 54 nhiệm vụ ẩn; 756 yêu thú/boss trấn thủ và 3 boss thế giới.
+- 714 nhiệm vụ, gồm 65 nhiệm vụ ẩn; 756 yêu thú/boss trấn thủ và 3 boss thế giới.
 - 45 cảnh giới, mỗi cảnh giới 10 tinh; đột phá và độ kiếp có xác suất, Hộ Kiếp Đan và cơ chế tăng may mắn sau thất bại.
 - 6 con đường tu, 6 huyết mạch, 8 linh căn với 5 phẩm; 16 ô trang bị, 8 phẩm, luyện khí và cường hóa.
 - 24 pet, 18 thú cưỡi, 8 danh hiệu, 60 thành tích, tân thủ, tông môn/gia tộc, 72 bí tịch/cổ tịch/truyền thừa, đạo lữ NPC trưởng thành.
 - 5 tiền tệ, chợ giao dịch nguyên tử, bảng xếp hạng thật, boss thế giới dùng chung HP và đóng góp.
-- 6 pháp thân mở ở Trúc Cơ, Nguyên Anh, Độ Kiếp, Kim Tiên, Hạ Thần, Thần Thánh; animation sau lưng, 30 tầng lĩnh ngộ và chiêu thức tỉnh tăng 25% sát thương trong 8 giây.
+- 18 pháp thân: 9 theo cảnh giới và 9 bí truyền từ cơ duyên; animation sau lưng, 30 tầng lĩnh ngộ và chiêu thức tỉnh tăng 25% sát thương trong 8 giây.
 - 5 đan phương; luyện thể, thần thức, đạo ý (50 tầng mỗi nhánh); 7 ủy thác hằng ngày, reset theo UTC.
 - Tổ đội tối đa 5 người, mã/link mời, phụ bản 3 đợt boss có HP chung và thưởng riêng; chat Thế giới/Tổ đội/Tông môn có kiểm tra thành viên.
 
@@ -69,7 +69,7 @@ Bấm đất hoặc dùng WASD/phím mũi tên để di chuyển. Bấm NPC đ�
 
 Vinext/React, Cloudflare Workers runtime local (Wrangler/Miniflare) và D1 tương thích SQLite. API `/api/rpg` kiểm tra khoảng cách, hồi chiêu, tài nguyên, cảnh giới, đóng góp và quyền nhận thưởng. Đồng bộ HTTP khoảng 1,4 giây, có phản hồi nhẹ và tạm dừng khi tab ẩn. Header danh tính Sites không được dùng làm thông tin đăng nhập trong runtime độc lập.
 
-Đây là MMORPG nhỏ, chưa kiểm thử tải đông người, chưa có PvP hay anti-cheat chuyên dụng. Quái thường và phụ bản cá nhân thuộc tiến trình nhân vật; boss thế giới và tổ đội dùng trạng thái chung. Map dùng bốn nền gốc kết hợp màu, thời tiết và bố cục riêng. Nhiệm vụ sinh từ các loại hoạt động, chưa phải 702 cốt truyện viết riêng; NPC/quái dùng mẫu sprite và biến thể. Chưa có lãnh địa chiến, quản lý cấp bậc tông môn hoặc kết đạo lữ giữa người chơi.
+Đây là MMORPG nhỏ, chưa kiểm thử tải đông người, chưa có PvP hay anti-cheat chuyên dụng. Quái thường và phụ bản cá nhân thuộc tiến trình nhân vật; boss thế giới và tổ đội dùng trạng thái chung. Map dùng bốn nền gốc kết hợp màu, thời tiết và bố cục riêng. Nhiệm vụ sinh từ các loại hoạt động, chưa phải 714 cốt truyện viết riêng; NPC/quái dùng mẫu sprite và biến thể. Chưa có lãnh địa chiến, quản lý cấp bậc tông môn hoặc kết đạo lữ giữa người chơi.
 
 ## Triển khai lâu dài
 
@@ -82,3 +82,24 @@ Hình ảnh nằm trong `public/art`, `public/rpg`, `public/ui`; sprite/animatio
 Map đầu yên bình cho tới khi hoàn thành lời thề ở bia cổ. Gặp Lâm Thanh Huyền ở sân giữa để tự nhận chương I; nhận thưởng sẽ tự mở chương kế tiếp. Năm chương dẫn qua trò chuyện, 3 Thanh Tâm Thảo, bia cổ, 3 Thanh Linh Hồ rồi boss trấn thủ. Ba quái xuất hiện sau chương III, boss sau chương IV; hoàn thành chương V mở lại đầy đủ quái của map. Phụ bản giữ cơ chế quái riêng. ID nhiệm vụ cũ được giữ để tương thích nhân vật đã lưu.
 
 Màn tiên môn dùng phiên nhân vật hiện có; đây không phải đăng nhập bằng mật khẩu. `/restore` vẫn dùng mã khôi phục riêng. Nhạc nền ngũ cung được tổng hợp bằng Web Audio, không cần tải nhạc ngoài; bật/tắt ở nút âm thanh, tự tạm dừng khi ẩn tab. Nhân vật có chuyển động thở và đung đưa khi đứng yên.
+
+## Thiên cơ và Phong Vân Bảng
+
+Bản mở rộng có **12 cơ duyên ẩn viết riêng** ở 10 linh địa: điều tức nghe chuông, hái thảo cứu sen, tìm ngọc, giúp sói trắng, giải đèn hàn đàm, khám phá giếng tiền kiếp, kế thừa cổ kiếm và minh ước tổ đội. Mở **Thiên cơ** để đọc manh mối, xem tọa độ và tiến độ, sau đó bấm dấu ✦ trên map. Máy chủ kiểm tra cảnh giới, khoảng cách và mục tiêu. Khám phá tự nhận nhiệm vụ; nhận thưởng một lần để lấy tinh phách, cổ tịch và mở bí truyền. Nếu bỏ nhiệm vụ, có thể nhận lại nhưng không nhận thưởng lặp.
+
+Có **18 pháp thân**, gồm 6 pháp thân gốc, 3 pháp thân mở theo cảnh giới và 9 bí truyền từ cơ duyên. Các pháp tướng mới có hình học riêng: đạo liên, kiếm trận, nguyệt luân, băng kính, tinh bàn và pháp ấn. Pháp thân gốc giữ nguyên ID và thưởng; tự tiến hóa chọn pháp thân theo cảnh giới, bí truyền cần chọn sau khi hoàn thành cơ duyên. Hiệu ứng thức tỉnh vẫn tăng 25% sát thương trong 8 giây.
+
+**Phong Vân Bảng** hiển thị top 100 với phân trang, hai bảng tu vi/lực chiến và hạng cá nhân toàn máy chủ. Tu vi xếp theo cảnh giới, tinh rồi XP; hạng bằng nhau dùng ID để giữ thứ tự ổn định. Huy hiệu ba hạng đầu là trang trí trong bảng, không cấp danh hiệu hay thưởng cạnh tranh giả.
+
+**Cài đặt** lưu tại trình duyệt: tỉ lệ HUD, cỡ chữ thiên thư, viền an toàn, âm lượng, giảm chuyển động, tên NPC/quái và số sát thương. Giao diện thiên thư có thanh chuyển hệ thống; danh sách chức năng trên điện thoại cuộn để đủ chỗ.
+
+Kiểm thử hồi quy nội dung (không cần cơ sở dữ liệu):
+
+```sh
+./node_modules/.bin/esbuild tests/opening-story.test.ts --bundle --platform=node --format=esm --outfile=/tmp/opening-story-test.mjs
+node /tmp/opening-story-test.mjs
+./node_modules/.bin/esbuild tests/expansion.test.ts --bundle --platform=node --format=esm --outfile=/tmp/expansion-test.mjs
+node /tmp/expansion-test.mjs
+```
+
+Đây là bản mở rộng gameplay và giao diện, chưa có kết quả kiểm thử tải đông người. Để mở cộng đồng cần triển khai máy chủ hoạt động liên tục và đo tải API/D1; số lượng nội dung không thay thế kiểm thử vận hành.

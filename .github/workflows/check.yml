@@ -13,5 +13,11 @@ jobs:
           cache: npm
       - run: npm run install:ci
       - run: npm run check
+      - name: Story and secret progression regressions
+        run: |
+          ./node_modules/.bin/esbuild tests/opening-story.test.ts --bundle --platform=node --format=esm --outfile=/tmp/opening-story-test.mjs
+          node /tmp/opening-story-test.mjs
+          ./node_modules/.bin/esbuild tests/expansion.test.ts --bundle --platform=node --format=esm --outfile=/tmp/expansion-test.mjs
+          node /tmp/expansion-test.mjs
       - run: npm run build
       - run: npm run db:migrate
