@@ -1,1 +1,78 @@
-# Game-tu-tien-pixel
+# Vân Thiên Ký · Game tu tiên pixel trên web
+
+Toàn bộ bản game pháp thân và tổ đội được chuyển từ Sites sang repository **Kenz34a/Game-tu-tien-pixel**. Mã nguồn, hình ảnh gốc, font và giấy phép, schema và migration đều có trong repository. Bản này chạy độc lập trong Cloud Environment hoặc GitHub Codespaces, không cần Sites, dịch vụ connector hay đăng nhập ChatGPT.
+
+## Chạy trong cloud environment
+
+Cần Node.js 22.13 trở lên (khuyến nghị Node 22 LTS) và Python 3 nếu nhập dữ liệu cũ.
+
+```sh
+npm run install:ci
+npm run check
+npm run build
+npm run db:migrate
+npm start
+```
+
+Mở **cổng 8787** trong mục Ports của môi trường. Máy chủ lắng nghe `0.0.0.0`; nếu chạy trên máy cá nhân, mở `http://localhost:8787`. API và các tài nguyên hình ảnh được phục vụ cùng origin. Nhiều người cùng truy cập một máy chủ dùng chung cơ sở dữ liệu; mỗi trình duyệt có phiên nhân vật riêng qua cookie HttpOnly.
+
+### GitHub Codespaces
+
+Mở [repository](https://github.com/Kenz34a/Game-tu-tien-pixel), chọn **Code → Codespaces → Create codespace on main**. Cấu hình `.devcontainer/devcontainer.json` tự cài dependencies, build, áp dụng migration, khởi động game và mở cổng 8787. Codespaces có thể tính phí theo gói GitHub của bạn.
+
+Cổng Codespaces mặc định riêng tư. Nếu muốn người khác chơi, đổi Visibility của cổng 8787 sang Public trong mục Ports. Codespaces phù hợp phát triển và thử nghiệm; máy chủ dừng khi codespace ngủ hoặc bị tắt. Đây chưa phải hosting MMO hoạt động liên tục.
+
+### Phát triển
+
+```sh
+npm run db:migrate
+npm run dev
+```
+
+Mở cổng 5173. Sau khi sửa schema, dùng `npm run db:generate`, xem migration rồi chạy `npm run db:migrate`. Không sửa migration đã áp dụng. Wrangler ghi nhận các migration trong bảng `d1_migrations`, nên lệnh migrate có thể chạy lại an toàn.
+
+## Dữ liệu và khôi phục nhân vật
+
+Cơ sở dữ liệu SQLite nằm trong `.wrangler/state`. Tiến trình giữ được sau khi dừng và chạy lại máy chủ trong cùng workspace; cần sao lưu nếu xóa cloud environment. Không commit `.wrangler`, `.migration`, dữ liệu tài khoản hay các mã khôi phục lên repository công khai.
+
+Bản dữ liệu từ Sites được lưu riêng trong cloud environment hiện tại tại `.migration/sites-live-snapshot.json`. Khi tạo môi trường khác, chuyển file này riêng tư vào `.migration/`, rồi nhập vào một cơ sở dữ liệu **trống**, trước lần chạy game đầu tiên:
+
+```sh
+npm run db:migrate
+npm run db:import
+npm start
+```
+
+Script nhập tất cả bảng trong một transaction, kiểm tra schema và số dòng; từ chối nếu cơ sở dữ liệu đích đã có dữ liệu. Lưu bản snapshot gốc. Khóa thao tác, trạng thái online và thời điểm thao tác cũ được đặt về 0.
+
+Danh tính ChatGPT của máy chủ Sites không thể tự đăng nhập ở origin mới. Script chuyển những danh tính đó sang các phiên ngẫu nhiên và lưu mã truy cập riêng trong `.migration/session-recovery.json` (quyền file 0600). Chủ game cung cấp **đúng mã của từng người chơi** qua kênh riêng; người chơi mở `/restore` và nhập mã để tiếp tục nhân vật cũ. Mã này là thông tin đăng nhập, tuyệt đối không đưa lên GitHub hoặc gửi công khai. Nhân vật khách cũ cũng nằm trong snapshot; cookie của tên miền cũ không tự chuyển sang tên miền mới.
+
+Bản Sites hiện tại được giữ nguyên làm bản dự phòng. `docs/sites-origin.json` chỉ ghi lại nguồn gốc dự án; không tham gia vào runtime này. Không có credential Sites/GitHub trong repository.
+
+## Nội dung
+
+- 54 linh địa thuộc Hạ giới, Tiên giới, Thần giới; 108 NPC.
+- 702 nhiệm vụ, gồm 54 nhiệm vụ ẩn; 756 yêu thú/boss trấn thủ và 3 boss thế giới.
+- 45 cảnh giới, mỗi cảnh giới 10 tinh; đột phá và độ kiếp có xác suất, Hộ Kiếp Đan và cơ chế tăng may mắn sau thất bại.
+- 6 con đường tu, 6 huyết mạch, 8 linh căn với 5 phẩm; 16 ô trang bị, 8 phẩm, luyện khí và cường hóa.
+- 24 pet, 18 thú cưỡi, 8 danh hiệu, 60 thành tích, tân thủ, tông môn/gia tộc, 72 bí tịch/cổ tịch/truyền thừa, đạo lữ NPC trưởng thành.
+- 5 tiền tệ, chợ giao dịch nguyên tử, bảng xếp hạng thật, boss thế giới dùng chung HP và đóng góp.
+- 6 pháp thân mở ở Trúc Cơ, Nguyên Anh, Độ Kiếp, Kim Tiên, Hạ Thần, Thần Thánh; animation sau lưng, 30 tầng lĩnh ngộ và chiêu thức tỉnh tăng 25% sát thương trong 8 giây.
+- 5 đan phương; luyện thể, thần thức, đạo ý (50 tầng mỗi nhánh); 7 ủy thác hằng ngày, reset theo UTC.
+- Tổ đội tối đa 5 người, mã/link mời, phụ bản 3 đợt boss có HP chung và thưởng riêng; chat Thế giới/Tổ đội/Tông môn có kiểm tra thành viên.
+
+## Điều khiển
+
+Bấm đất hoặc dùng WASD/phím mũi tên để di chuyển. Bấm NPC để trò chuyện, tài nguyên để thu thập, yêu thú để chọn mục tiêu. Phím 1–4 xuất chiêu, 5 thức tỉnh pháp thân, Q bật/dừng tự chiến, R dùng linh đan, B mở hành trang, M mở map. Thiên thư mở toàn bộ hệ thống.
+
+## Kiến trúc và giới hạn
+
+Vinext/React, Cloudflare Workers runtime local (Wrangler/Miniflare) và D1 tương thích SQLite. API `/api/rpg` kiểm tra khoảng cách, hồi chiêu, tài nguyên, cảnh giới, đóng góp và quyền nhận thưởng. Đồng bộ HTTP khoảng 1,4 giây, có phản hồi nhẹ và tạm dừng khi tab ẩn. Header danh tính Sites không được dùng làm thông tin đăng nhập trong runtime độc lập.
+
+Đây là MMORPG nhỏ, chưa kiểm thử tải đông người, chưa có PvP hay anti-cheat chuyên dụng. Quái thường và phụ bản cá nhân thuộc tiến trình nhân vật; boss thế giới và tổ đội dùng trạng thái chung. Map dùng bốn nền gốc kết hợp màu, thời tiết và bố cục riêng. Nhiệm vụ sinh từ các loại hoạt động, chưa phải 702 cốt truyện viết riêng; NPC/quái dùng mẫu sprite và biến thể. Chưa có lãnh địa chiến, quản lý cấp bậc tông môn hoặc kết đạo lữ giữa người chơi.
+
+## Triển khai lâu dài
+
+GitHub lưu mã nguồn; để game chạy liên tục cần một dịch vụ hosting đang hoạt động. Có thể dùng Cloudflare Workers/D1 với tài khoản của bạn: tạo D1, thay `database_id` trong `wrangler.jsonc`, chạy `npx wrangler d1 migrations apply DB --remote --config wrangler.jsonc`, build rồi deploy `dist/server/wrangler.json`. ID D1 mặc định trong repo chỉ dùng cho local. Repository có workflow GitHub Actions để kiểm tra TypeScript, build và migration; workflow không tự triển khai hay cần secret.
+
+Hình ảnh nằm trong `public/art`, `public/rpg`, `public/ui`; sprite/animation ở `lib/rpg/pixels.ts`, `dharma-art.ts`, `scenery.ts`. Font và giấy phép được giữ trong `public/fonts`.

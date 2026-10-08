@@ -1,0 +1,12 @@
+{
+  "name": "Vân Thiên Ký · Cloud Environment",
+  "image": "mcr.microsoft.com/devcontainers/javascript-node:1-22-bookworm",
+  "forwardPorts": [8787, 5173],
+  "portsAttributes": {
+    "8787": { "label": "Vân Thiên Ký", "onAutoForward": "openPreview" },
+    "5173": { "label": "Development", "onAutoForward": "silent" }
+  },
+  "postCreateCommand": "npm run install:ci && npm run build && npm run db:migrate",
+  "postStartCommand": "nohup npm start > /tmp/van-thien-ky-server.log 2>&1 &",
+  "customizations": { "vscode": { "extensions": ["dbaeumer.vscode-eslint"] } }
+}

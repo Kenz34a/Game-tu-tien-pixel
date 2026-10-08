@@ -1,0 +1,4 @@
+'use client';
+import {useEffect,useRef} from 'react';
+import {dharmaImage} from '@/lib/rpg/dharma-art';
+export function DharmaPreview({id,size=190,animated=false}:{id:number;size?:number;animated?:boolean}){const ref=useRef<HTMLCanvasElement>(null);useEffect(()=>{const c=ref.current,ctx=c?.getContext('2d');if(!c||!ctx)return;let frame=0;const draw=(time:number)=>{c.width=size*2;c.height=size*2;ctx.scale(2,2);ctx.imageSmoothingEnabled=false;const img=dharmaImage(id);if(img)ctx.drawImage(img,0,Math.sin(time/900)*2,size,size);if(animated)frame=requestAnimationFrame(draw);};const ready=()=>draw(performance.now());if(!animated)window.addEventListener('rpg-atlas-ready',ready);draw(performance.now());return()=>{cancelAnimationFrame(frame);window.removeEventListener('rpg-atlas-ready',ready);};},[id,size,animated]);return <canvas ref={ref} width={size} height={size} style={{width:size,height:size}} aria-label="Pháp thân pixel"/>;}

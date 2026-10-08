@@ -1,0 +1,8 @@
+import {currentDharma,DHARMAS} from './immortal';
+import type {Profile} from './model';
+let atlas:HTMLImageElement|null=null;const cache=new Map<number,HTMLCanvasElement>();
+export function dharmaImage(id:number){if(typeof Image==='undefined')return null;if(!atlas){atlas=new Image();atlas.onload=()=>window.dispatchEvent(new Event('rpg-atlas-ready'));atlas.src='/rpg/dharmas.png';}if(!atlas.complete||!atlas.naturalWidth)return null;if(cache.has(id))return cache.get(id)!;const cell=document.createElement('canvas');cell.width=256;cell.height=256;const c=cell.getContext('2d')!;c.imageSmoothingEnabled=false;c.drawImage(atlas,id%3*512,Math.floor(id/3)*512,512,512,0,0,256,256);cache.set(id,cell);return cell;}
+export function drawDharma(c:CanvasRenderingContext2D,x:number,y:number,time:number,p:Pick<Profile,'realm'|'dharmaId'> & {dharmaLevel?:number;cooldowns?:Record<string,number>},small=false){const d=currentDharma(p);if(!d)return;const img=dharmaImage(d.id);if(!img)return;const active=(p.cooldowns?.dharmaActive||0)>Date.now(),size=Math.round((175+d.id*15+(p.dharmaLevel||1)*1.5)*(small?.8:1)),bob=Math.sin(time/850)*3;
+ c.save();c.imageSmoothingEnabled=false;c.globalAlpha=active?.92:.55;c.drawImage(img,Math.round(x-size/2),Math.round(y-size-14+bob),size,size);c.globalAlpha=active?.85:.45;c.strokeStyle=d.color;c.lineWidth=1.5;c.beginPath();c.ellipse(x,y+2,active?58:43,active?22:15,0,0,Math.PI*2);c.stroke();c.globalAlpha=.45;
+ for(let i=0;i<7;i++){const a=time/2300+i*Math.PI*2/7,r=48+d.id*3;c.fillStyle=d.color;c.fillRect(Math.round(x+Math.cos(a)*r),Math.round(y-35+Math.sin(a)*r*.6),2,5);}
+ c.restore();}
