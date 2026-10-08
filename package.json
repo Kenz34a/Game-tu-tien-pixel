@@ -9,7 +9,7 @@
     "install:ci": "node scripts/install-ci.mjs",
     "dev": "node --import ./scripts/sites-env.mjs ./node_modules/vinext/dist/cli.js dev --host 0.0.0.0 --port 5173",
     "build": "node --import ./scripts/sites-env.mjs ./node_modules/vinext/dist/cli.js build",
-    "start": "node --import ./scripts/sites-env.mjs ./node_modules/wrangler/bin/wrangler.js dev --config dist/server/wrangler.json --local --persist-to .wrangler/state --ip 0.0.0.0 --inspector-port 0 --port 8787",
+    "start": "node scripts/start-local.mjs",
     "lint": "eslint . --ignore-pattern dist --ignore-pattern .next",
     "db:generate": "drizzle-kit generate",
     "check": "tsc --noEmit",

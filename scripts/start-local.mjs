@@ -1,0 +1,11 @@
+import {spawn} from 'node:child_process';
+import {existsSync} from 'node:fs';
+import path from 'node:path';
+import {projectRoot} from './sites-env.mjs';
+const secrets=path.join(projectRoot,'.dev.vars');
+const args=['--import',path.join(projectRoot,'scripts/sites-env.mjs'),path.join(projectRoot,'node_modules/wrangler/bin/wrangler.js'),'dev','--config','dist/server/wrangler.json','--local','--persist-to','.wrangler/state','--ip','0.0.0.0','--inspector-port','0','--port',process.env.PORT||'8787'];
+if(existsSync(secrets))args.push('--env-file',secrets);
+const child=spawn(process.execPath,args,{cwd:projectRoot,env:process.env,stdio:'inherit'});
+for(const signal of ['SIGINT','SIGTERM'])process.on(signal,()=>child.kill(signal));
+child.on('error',error=>{console.error(error.message);process.exit(1);});
+child.on('exit',code=>process.exit(code??0));
