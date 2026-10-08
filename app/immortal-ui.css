@@ -29,3 +29,7 @@
 @media(max-width:700px){.r-title-filters input{flex-basis:100%;width:100%}.r-title-filters select{flex:1}.r-title-filters{gap:6px}}
 .r-title-ribbon-art{display:block;width:min(320px,100%);height:auto;margin:-4px 0;image-rendering:pixelated}.r-board-row>div{min-width:0}
 @media(max-width:700px){.r-board-row{grid-template-columns:35px minmax(0,1fr)}.r-board-row>strong{grid-column:2;text-align:left}.r-title-ribbon-art{max-width:100%}}
+
+.r-map-backdrop{position:absolute;inset:0;width:100%;height:100%;pointer-events:none}.r-region-marker.camp{background:#273c30;border:1px solid #d3bb77;border-radius:50%;width:25px;height:25px;font-size:14px;z-index:2}.r-camp-row{display:flex;flex-direction:column;gap:3px;text-align:left;width:100%;background:#162824;border:1px solid #59674d;padding:8px 10px;margin:5px 0;color:#dcc58b}.r-camp-row small{color:#95b9a5}.r-region-marker{z-index:1}
+
+.r-camp-list{max-height:300px;overflow:auto;scrollbar-color:#8c7850 #14231f}

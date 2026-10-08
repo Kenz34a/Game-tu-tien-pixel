@@ -15,6 +15,8 @@ jobs:
       - run: npm run check
       - name: Story and secret progression regressions
         run: |
+          ./node_modules/.bin/esbuild tests/map-layout.test.ts --bundle --platform=node --format=esm --outfile=/tmp/map-layout-test.mjs
+          node /tmp/map-layout-test.mjs
           ./node_modules/.bin/esbuild tests/opening-story.test.ts --bundle --platform=node --format=esm --outfile=/tmp/opening-story-test.mjs
           node /tmp/opening-story-test.mjs
           ./node_modules/.bin/esbuild tests/actor-motion.test.ts --bundle --platform=node --format=esm --outfile=/tmp/actor-motion-test.mjs
@@ -39,3 +41,4 @@ jobs:
           node tests/chat-smoke.mjs
           node tests/quest-journal-smoke.mjs
           node tests/starter-tail-smoke.mjs
+          node tests/wide-maps-smoke.mjs

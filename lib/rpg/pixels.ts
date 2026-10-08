@@ -6,7 +6,7 @@ const trims=['#d9b27a','#9dd9db','#c4d69a','#dfbfdc','#dfcd8f','#ef9b8d'];
 const skins=['#f0c6ac','#e7bb94','#e4cabb','#c59a7c'];
 function rect(c:CanvasRenderingContext2D,x:number,y:number,w:number,h:number,color:string){c.fillStyle=color;c.fillRect(Math.round(x),Math.round(y),w,h);}
 function line(c:CanvasRenderingContext2D,x0:number,y0:number,x1:number,y1:number,color:string,width=1){let x=Math.round(x0),y=Math.round(y0),x2=Math.round(x1),y2=Math.round(y1),dx=Math.abs(x2-x),sx=x<x2?1:-1,dy=-Math.abs(y2-y),sy=y<y2?1:-1,err=dx+dy;for(let i=0;i<100;i++){rect(c,x,y,width,width,color);if(x===x2&&y===y2)break;const e=2*err;if(e>=dy){err+=dy;x+=sx;}if(e<=dx){err+=dx;y+=sy;}}}
-export type SpriteSpec={seed:number;claimed?:string[];classId?:string;root?:number;female?:boolean;npc?:boolean;pose?:number;facing?:number;moving?:boolean;attack?:boolean;realm?:number;dharmaId?:number|null;dharmaLevel?:number};
+export type SpriteSpec={seed:number;claimed?:string[];classId?:string;root?:number;female?:boolean;npc?:boolean;pose?:number;facing?:number;moving?:boolean;attack?:boolean;attackAge?:number;hurtAge?:number;realm?:number;dharmaId?:number|null;dharmaLevel?:number};
 export function nameSeed(name:string){return [...name].reduce((a,c)=>a*31+c.charCodeAt(0),17)>>>0;}
 function drawActorProcedural(c:CanvasRenderingContext2D,x:number,y:number,time:number,s:SpriteSpec,scale=1.8){
  const seed=s.seed>>>0,female=s.female??seed%2===1,npc=!!s.npc,pose=s.pose??seed%12,facing=s.facing||0,walking=!!s.moving,step=Math.floor(time/120)%4,bob=walking?(step%2):Math.floor(time/700)%2,skin=skins[seed%4],robe=npc?tones[seed%12]:({sword:'#414459',body:'#636367',fist:'#684251',spell:'#5b5080',spear:'#425768',healer:'#49655b'}[s.classId||'sword']||'#414459'),trim=npc?trims[Math.floor(seed/4)%6]:['#cf7c78','#d4bc8d','#8ed2cd','#acb5df','#deb980','#b2d095'][(s.root||0)%6],dark='#1b192a',hair=['#25202d','#211f30','#514650','#babbb4','#3e2f32'][npc?Math.floor(seed/8)%5:0],hairLight=hair==='#babbb4'?'#e9e1c9':'#514355',length=female?39:34+(seed%3)*3,bodyW=12+seed%3;
@@ -64,18 +64,30 @@ function atlasSprite(frame:number,hue:number):HTMLCanvasElement|null {
  ctx.imageSmoothingEnabled=false;if(hue)ctx.filter='hue-rotate('+hue+'deg)';ctx.drawImage(actorAtlas,(frame%4)*384,Math.floor(frame/4)*256,384,256,0,0,192,128);portraitCache.set(key,cell);return cell;
 }
 export function drawActor(c:CanvasRenderingContext2D,x:number,y:number,time:number,s:SpriteSpec,scale=1.8){
- const seed=s.seed>>>0,npc=!!s.npc,female=s.female??seed%2===1,step=Math.floor(time/160)%2;
+ const seed=s.seed>>>0,npc=!!s.npc,female=s.female??seed%2===1;
  const maleFrames=[4,7,8,10,12,14],femaleFrames=[5,6,9,11,13,15];
- let frame=npc?(female?femaleFrames:maleFrames)[Math.floor(seed/2)%6]:s.classId==='body'||s.classId==='fist'?10:s.classId==='spear'?7:s.classId==='spell'?8:s.classId==='healer'?11:s.attack?3:s.moving?1+step:0;
+ let frame=npc?(female?femaleFrames:maleFrames)[Math.floor(seed/2)%6]:s.classId==='body'||s.classId==='fist'?10:s.classId==='spear'?7:s.classId==='spell'?8:s.classId==='healer'?11:s.attack?(time===0?3:(s.attackAge||0)<150?0:(s.attackAge||0)<420?3:(s.attackAge||0)<560?1:0):s.moving?1+Math.floor(time/150)%2:0;
  const hue=npc?Math.floor(seed/12)*17:(s.root||0)*5;
  const sprite=atlasSprite(frame,hue);if(!sprite){drawActorProcedural(c,x,y,time,s,scale);return;}
  c.save();c.translate(Math.round(x),Math.round(y));c.scale(scale,scale);c.imageSmoothingEnabled=false;
- // Full pose frames for sword cultivators, with animated cloth and footfall.
- const rig=actorMotion(time,seed,s.moving,s.attack),flip=s.facing===2||(npc&&Math.floor(seed/24)%2===1);
- if(flip)c.scale(-1,1);c.rotate(rig.sway);
- // Layered strips let the robe and hair move independently of the grounded feet.
- for(let row=0;row<16;row++){const sy=row*8,weight=Math.sin(row/15*Math.PI),cloth=rig.cloth*weight,breath=rig.breath*(1-row/15),stride=rig.stride*Math.max(0,(row-10)/5);c.drawImage(sprite,0,sy,192,8,-36+cloth+stride,-55+row*3.5-breath,72,3.65);}
- if(time>0&&!s.moving&&!s.attack){const color=npc?'#c6d8a2':['#d5c48d','#93d6b2','#95d8e8','#ef9f88','#d6c69c','#b8a0e7','#addef6','#99e0d2'][(s.root||0)%8];c.globalAlpha=.45;for(let i=0;i<3;i++){const a=time/900+seed+i*2.1;c.fillStyle=color;c.fillRect(Math.cos(a)*22,-16-((time/45+i*17+seed)%42),1.2,1.2);}c.globalAlpha=1;}
+ // Rigid body parts pivot at shoulders and hips. The face and torso never ripple.
+ const rig=actorMotion(time,seed,s.moving,s.attack,s.attackAge),hurt=time&&s.hurtAge!==undefined&&s.hurtAge<240?Math.sin(s.hurtAge/240*Math.PI)*2:0,flip=s.facing===2||(npc&&Math.floor(seed/24)%2===1);
+ c.fillStyle='#07131150';c.beginPath();c.ellipse(0,1,14,4,0,0,Math.PI*2);c.fill();
+ if(flip)c.scale(-1,1);
+ const part=(left:number,top:number,w:number,h:number,px:number,py:number,angle=0,dy=0)=>{c.save();c.translate(px,py+dy);c.rotate(angle);c.drawImage(sprite,(left+36)*192/72,(top+55)*128/56,w*192/72,h*128/56,left-px,top-py,w,h);c.restore();};
+ if(!npc&&(s.classId||'sword')==='sword'&&(s.moving||s.attack)){
+  // Authored full-body poses preserve the silhouette during a stride or sword strike.
+  c.translate(rig.lunge-hurt,0);c.drawImage(sprite,-36,-55-rig.breath,72,56);
+ }else{
+  // Overlap joints under the torso so sleeves and robe remain attached.
+  part(-36,-12,36,13,-5,-12,rig.leftLeg*.5,s.moving?Math.min(0,rig.stride):0);
+  part(0,-12,36,13,5,-12,rig.rightLeg*.5,s.moving?Math.min(0,-rig.stride):0);
+  c.save();c.translate(rig.lunge-hurt,-rig.breath);c.rotate(rig.sway-hurt*.025);
+  part(-36,-29,24,19,-12,-27,rig.leftArm*.38);
+  part(12,-29,24,19,12,-27,rig.rightArm*.38);
+  part(-14,-29,28,19,0,-20);
+  part(-36,-55,72,28,0,-29);c.restore();
+ }
  // Each NPC also carries an individual insignia and stance ornament.
  if(npc&&seed>=12){const trim=trims[Math.floor(seed/12)%6];rect(c,-1,-21,2,2,trim);if(seed%3===0){line(c,-4,-20,-7-Math.sin(time/650+seed)*2,-12,trim);}}
  c.restore();
@@ -94,13 +106,14 @@ function beastSprite(frame:number,hue=0){
  for(let y=0;y<128;y++)for(let x=0;x<192;x++)if(alpha[(y*192+x)*4+3]>90){left=Math.min(left,x);top=Math.min(top,y);right=Math.max(right,x);bottom=Math.max(bottom,y);}
  const trimmed=document.createElement('canvas');trimmed.width=right-left+1;trimmed.height=bottom-top+1;trimmed.getContext('2d')!.drawImage(cell,left,top,trimmed.width,trimmed.height,0,0,trimmed.width,trimmed.height);beastCache.set(key,trimmed);return trimmed;
 }
-export function drawEnemy(c:CanvasRenderingContext2D,x:number,y:number,time:number,e:{kind:number;appearance:number;boss?:boolean;worldBoss?:boolean}){
+export function drawEnemy(c:CanvasRenderingContext2D,x:number,y:number,time:number,e:{kind:number;appearance:number;boss?:boolean;worldBoss?:boolean;attacking?:boolean;hitAge?:number;direction?:number}){
  const index=e.appearance%14,worldBoss=e.worldBoss||e.appearance>=810;
  const frame=worldBoss?9+((e.appearance-810)%3+3)%3:e.boss?8:[0,1,2,3,4,5,6,7,1,3,2,11,8,8][index];
  const sprite=beastSprite(frame,worldBoss?0:Math.floor(e.appearance/14)%12*13);
  if(!sprite){drawEnemyProcedural(c,x,y,time,e);return;}
  const size=worldBoss?190:e.boss?128:index>=10?74:64,scale=Math.min((worldBoss?235:e.boss?160:90)/sprite.width,size/sprite.height),w=Math.round(sprite.width*scale),h=Math.round(sprite.height*scale),bob=Math.sin(time/(index===6?160:360)+e.appearance)*(index===6||index===7?2:1);
- c.save();c.imageSmoothingEnabled=false;c.drawImage(sprite,Math.round(x-w/2),Math.round(y-h+bob),w,h);c.restore();
+ const hit=time&&e.hitAge!==undefined&&e.hitAge<220?Math.sin(e.hitAge/220*Math.PI):0,cycle=(time+e.appearance*83)%1100,thrust=time&&e.attacking&&cycle>750?Math.sin((cycle-750)/350*Math.PI)*9:0,dx=(thrust-hit*8)*(e.direction||1);
+ c.save();c.imageSmoothingEnabled=false;if(hit>.4)c.filter='brightness(1.65)';c.drawImage(sprite,Math.round(x-w/2+dx),Math.round(y-h+bob),w,h);c.restore();
 }
 export function drawCompanion(c:CanvasRenderingContext2D,x:number,y:number,time:number,id:number,mount=false,moving=false){
  const type=mount?((id-40)%3+3)%3:id%4;

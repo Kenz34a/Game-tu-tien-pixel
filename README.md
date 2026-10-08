@@ -53,11 +53,11 @@ Bản Sites hiện tại được giữ nguyên làm bản dự phòng. `docs/si
 
 ## Nội dung
 
-- 54 linh địa thuộc Hạ giới, Tiên giới, Thần giới; 108 NPC.
-- 717 nhiệm vụ, gồm 65 nhiệm vụ ẩn; 756 yêu thú/boss trấn thủ và 3 boss thế giới.
+- 54 linh địa thuộc Hạ giới, Tiên giới, Thần giới; mỗi map ngoài trời rộng 4608 × 3072, với 7 bãi yêu thú tách nhau; 108 NPC.
+- 717 nhiệm vụ, gồm 65 nhiệm vụ ẩn; 756 mẫu yêu thú/boss trấn thủ, 1890 cá thể chia 7 bãi × 5 quái mỗi map khi mở đủ, và 3 boss thế giới.
 - 45 cảnh giới, mỗi cảnh giới 10 tinh; đột phá và độ kiếp có xác suất, Hộ Kiếp Đan và cơ chế tăng may mắn sau thất bại.
 - 6 con đường tu, 6 huyết mạch, 8 linh căn với 5 phẩm; 16 ô trang bị, 8 phẩm, luyện khí và cường hóa.
-- 24 pet, 18 thú cưỡi, 8 danh hiệu, 60 thành tích, tân thủ, tông môn/gia tộc, 72 bí tịch/cổ tịch/truyền thừa, đạo lữ NPC trưởng thành.
+- 24 pet, 18 thú cưỡi, 152 danh hiệu, 60 thành tích, tân thủ, tông môn/gia tộc, 72 bí tịch/cổ tịch/truyền thừa, đạo lữ NPC trưởng thành.
 - 5 tiền tệ, chợ giao dịch nguyên tử, bảng xếp hạng thật, boss thế giới dùng chung HP và đóng góp.
 - 18 pháp thân: 9 theo cảnh giới và 9 bí truyền từ cơ duyên; animation sau lưng, 30 tầng lĩnh ngộ và chiêu thức tỉnh tăng 25% sát thương trong 8 giây.
 - 5 đan phương; luyện thể, thần thức, đạo ý (50 tầng mỗi nhánh); 7 ủy thác hằng ngày, reset theo UTC.
@@ -91,7 +91,7 @@ Bản mở rộng có **12 cơ duyên ẩn viết riêng** ở 10 linh địa: �
 
 Có **18 pháp thân**, gồm 6 pháp thân gốc, 3 pháp thân mở theo cảnh giới và 9 bí truyền từ cơ duyên. Các pháp tướng mới có hình học riêng: đạo liên, kiếm trận, nguyệt luân, băng kính, tinh bàn và pháp ấn. Pháp thân gốc giữ nguyên ID và thưởng; tự tiến hóa chọn pháp thân theo cảnh giới, bí truyền cần chọn sau khi hoàn thành cơ duyên. Hiệu ứng thức tỉnh vẫn tăng 25% sát thương trong 8 giây.
 
-**Phong Vân Bảng** hiển thị top 100 với phân trang, hai bảng tu vi/lực chiến và hạng cá nhân toàn máy chủ. Tu vi xếp theo cảnh giới, tinh rồi XP; hạng bằng nhau dùng ID để giữ thứ tự ổn định. Huy hiệu ba hạng đầu là trang trí trong bảng, không cấp danh hiệu hay thưởng cạnh tranh giả.
+**Phong Vân Bảng** có 8 bảng top 100 với phân trang và hạng cá nhân toàn máy chủ. Mỗi bảng cấp danh hiệu riêng cho ba hạng đầu; quyền dùng cập nhật theo thứ hạng. Xem chi tiết ở phần Danh hiệu, xếp hạng và chiêu thức bên dưới.
 
 **Cài đặt** lưu tại trình duyệt: tỉ lệ HUD, cỡ chữ thiên thư, viền an toàn, âm lượng, giảm chuyển động, tên NPC/quái và số sát thương. Giao diện thiên thư có thanh chuyển hệ thống; danh sách chức năng trên điện thoại cuộn để đủ chỗ.
 
@@ -162,3 +162,11 @@ docker run --rm -p 8787:8787 -v cultivation-state:/var/data van-thien-ky
 ### Trải nghiệm tân thủ · Nhập Đạo 02
 
 Nhân vật mới xuất hiện tại **Thanh Vân Tân Thôn** và nhận sẵn nhiệm vụ đầu. Khu tân thủ có đèn lồng đung đưa, cánh hoa, linh khí và Tụ Linh Đài; nhân vật/NPC có chuyển động áo tóc và vận khí. Chính tuyến gồm **8 bước**: 5 bước phong ấn Thanh Vân, rồi phục hồi Ngọc Ấn, đến Trúc Lâm và nhận Thanh Vân Kiếm Quyết. Người chơi cũ có thể dùng nút **Về tân thôn** để quay lại mà giữ tiến độ. Nếu chế độ giảm chuyển động đang bật, có nút **Bật animation** ngay trong game.
+
+## Map rộng và thân pháp 04
+
+Camera theo nhân vật trên máy tính và điện thoại; giới hạn di chuyển, bản đồ nhỏ, Sơn hà đồ và khoảng cách chiến đấu dùng chung tọa độ. Mỗi map có 7 bãi cách nhau ít nhất 600 đơn vị, mỗi bãi 5 quái, gồm bãi trấn thủ có một boss và bốn hộ vệ. Bấm số bãi hoặc tên bãi trong bản đồ khu vực rồi chọn **Đi tới mục tiêu** để đi bộ đến đó. Quái bổ sung có trạng thái chết/hồi sinh riêng và vẫn tính vào nhiệm vụ đúng loài. Tân thôn mới không có quái; nhiệm vụ mở lần lượt 3 quái, boss rồi đủ 7 bãi. Cổ cảnh cá nhân giữ đấu trường riêng và đưa người chơi về sân khi ra khỏi cảnh.
+
+Nhân vật dùng các tư thế toàn thân cho bước chân và vung kiếm; các lớp khác/NPC chuyển động theo khớp vai, hông với điểm nối chồng dưới thân áo. Không uốn hình theo từng dải ngang. Đứng yên thở nhẹ với chân chạm đất; đánh có lấy đà, ra đòn và thu thế, hướng về mục tiêu, tạm dừng bước trong 620 ms ra chiêu. Người chơi và quái phản ứng khi trúng đòn; giảm chuyển động giữ tư thế tĩnh. Đây vẫn là sprite 2D; bộ hình hiện tại chưa có tư thế lưng riêng đầy đủ cho mọi lớp.
+
+Kiểm tra bổ sung: bundle/chạy `tests/map-layout.test.ts` như các bài TypeScript ở trên; sau khi chạy game local, `node tests/wide-maps-smoke.mjs` kiểm tra chiến đấu thật ở bãi xa, tiến độ loài, giới hạn tốc độ và vào/ra cổ cảnh. Bài smoke chỉ dùng hồ sơ `QA_CAMPS_` trong cơ sở dữ liệu phát triển.
