@@ -126,3 +126,7 @@ Chat có bộ lọc Tất cả/Thế giới/Gần Đây/Tổ đội/Tông môn, 
 ### Kiểm tra chat nhiều người chơi
 
 Sau khi migrate và khởi động ứng dụng cục bộ trên cổng 8787, chạy `node tests/chat-smoke.mjs`. Bài kiểm tra tạo các nhân vật có tên bắt đầu bằng `QA_MAPCHAT_`, kiểm tra kênh thế giới, Gần Đây theo map, quyền đọc chat tổ đội/tông môn và thời gian gửi. Chỉ chạy với cơ sở dữ liệu phát triển; hồ sơ kiểm tra được giữ lại để chẩn đoán.
+
+## Menu chức năng trên HUD
+
+Menu chính có 12 lối tắt và bảng **Thêm** gồm Linh sủng, Tiên duyên, Bí tịch, Đan đạo, Chợ giao dịch, Pháp thân, Động Khiếu, Đạo tâm, Cảnh giới, Nhân vật, Hành trang và Cài đặt. Các mục mở hệ thống gameplay tương ứng. Nhiệm vụ/Nhật khóa hiện số thưởng đã đủ điều kiện và chưa nhận. Bảng Thêm hỗ trợ bàn phím, Escape, đóng khi bấm ra ngoài và bố cục điện thoại; Thiên thư vẫn mở toàn bộ danh mục chức năng.
