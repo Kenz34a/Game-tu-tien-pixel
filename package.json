@@ -14,7 +14,8 @@
     "db:generate": "drizzle-kit generate",
     "check": "tsc --noEmit",
     "db:migrate": "node --import ./scripts/sites-env.mjs ./node_modules/wrangler/bin/wrangler.js d1 migrations apply DB --local --config wrangler.jsonc --persist-to .wrangler/state",
-    "db:import": "python3 scripts/import-snapshot.py"
+    "db:import": "python3 scripts/import-snapshot.py",
+    "play": "node scripts/play-local.mjs"
   },
   "dependencies": {
     "@base-ui/react": "^1.7.0",

@@ -1,3 +1,5 @@
+> Muốn chơi trên máy Windows trước? Xem [hướng dẫn chạy máy và chơi chung Wi-Fi](docs/CHOI-TREN-MAY.md). Bấm đúp `CHAY-GAME-WINDOWS.cmd` hoặc chạy `npm run play`.
+
 # Vân Thiên Ký · Game tu tiên pixel trên web
 
 Toàn bộ bản game pháp thân và tổ đội được chuyển từ Sites sang repository **Kenz34a/Game-tu-tien-pixel**. Mã nguồn, hình ảnh gốc, font và giấy phép, schema và migration đều có trong repository. Bản này chạy độc lập trong Cloud Environment hoặc GitHub Codespaces, không cần Sites, dịch vụ connector hay đăng nhập ChatGPT.
