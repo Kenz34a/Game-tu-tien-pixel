@@ -25,7 +25,7 @@ jobs:
           node /tmp/titles-test.mjs
       - run: npm run build
       - run: npm run db:migrate
-      - name: Authenticated chat smoke test
+      - name: Authenticated chat and quest tracking smoke tests
         run: |
           npm start >/tmp/rpg-smoke-server.log 2>&1 &
           rpg_server_pid=$!
@@ -35,3 +35,4 @@ jobs:
             sleep 1
           done
           node tests/chat-smoke.mjs
+          node tests/quest-journal-smoke.mjs
