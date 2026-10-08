@@ -33,3 +33,6 @@
 .r-map-backdrop{position:absolute;inset:0;width:100%;height:100%;pointer-events:none}.r-region-marker.camp{background:#273c30;border:1px solid #d3bb77;border-radius:50%;width:25px;height:25px;font-size:14px;z-index:2}.r-camp-row{display:flex;flex-direction:column;gap:3px;text-align:left;width:100%;background:#162824;border:1px solid #59674d;padding:8px 10px;margin:5px 0;color:#dcc58b}.r-camp-row small{color:#95b9a5}.r-region-marker{z-index:1}
 
 .r-camp-list{max-height:300px;overflow:auto;scrollbar-color:#8c7850 #14231f}
+
+.r-server-announcement{position:absolute;z-index:6;top:115px;left:50%;transform:translateX(-50%);max-width:min(560px,calc(100vw - 40px));padding:8px 16px;background:#132622ef;border:1px solid #bda166;color:#e5cc90;font:18px VT323;text-align:center;pointer-events:none}@media(max-width:650px){.r-server-announcement{top:130px;font-size:14px}}
+.r-skill-progression{display:flex;gap:5px;align-items:center;flex-wrap:wrap;padding:6px 9px;background:#10191df0;border:1px solid #93764a;color:#e4c785;font-size:11px;border-radius:8px}.r-skill-progression button{padding:5px 7px;border:1px solid #685c42;border-radius:5px;background:#172623;color:#d6e7de;font:inherit}.r-skill-progression button:disabled{opacity:.5}.r-skill:disabled .r-skill-icon{filter:saturate(.3)}

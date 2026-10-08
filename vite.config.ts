@@ -1,7 +1,9 @@
 import vinext from 'vinext';
 import { defineConfig } from 'vite';
+import path from 'node:path';
 
 export default defineConfig(async () => {
+  if(process.env.RPG_RUNTIME==='node')return {server:{host:'0.0.0.0'},resolve:{alias:{'cloudflare:workers':path.resolve('lib/node-env.ts')}},plugins:[vinext()]};
   process.env.CLOUDFLARE_CF_FETCH_ENABLED ??= 'false';
   process.env.WRANGLER_SEND_METRICS ??= 'false';
   process.env.WRANGLER_WRITE_LOGS ??= 'false';

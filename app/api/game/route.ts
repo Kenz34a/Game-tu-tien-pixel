@@ -1,3 +1,6 @@
+import {requestOrigin,secureRequest} from '@/lib/request-origin';
+import {ensurePlayable} from '@/lib/rpg/server-settings';
+import {AdminError} from '@/lib/rpg/admin-auth';
 import { gameDb } from '@/lib/game-db';
 import { SKILLS,MONSTERS,maxHp,maxMp,xpNeed,boundedPosition } from '@/lib/game-rules';
 export const dynamic='force-dynamic';
@@ -5,7 +8,7 @@ class RuleError extends Error {}
 const json=(data:unknown,status=200,headers:Record<string,string>={})=>Response.json(data,{status,headers:{'Cache-Control':'no-store',...headers}});
 async function identity(req:Request){
  const db=gameDb();let id=req.headers.get('cookie')?.match(/(?:^|;\s*)vt_session=([a-f0-9-]{36})/)?.[1];let cookie='';
- if(!id){id=crypto.randomUUID();cookie=`vt_session=${id}; Path=/; HttpOnly; SameSite=Lax; Max-Age=31536000${new URL(req.url).protocol==='https:'?'; Secure':''}`;}
+ if(!id){id=crypto.randomUUID();cookie=`vt_session=${id}; Path=/; HttpOnly; SameSite=Lax; Max-Age=31536000${secureRequest(req)?'; Secure':''}`;}
  await db.prepare('INSERT OR IGNORE INTO players (id,name,last_seen) VALUES (?,?,?)').bind(id,'Thanh Vân',Date.now()).run();
  const p:any=await db.prepare('SELECT * FROM players WHERE id=?').bind(id).first();return {db,id,p,cookie};
 }
@@ -16,11 +19,11 @@ async function world(db:ReturnType<typeof gameDb>,id:string){
  const [player,peers,monsters,chat]=await Promise.all([db.prepare('SELECT * FROM players WHERE id=?').bind(id).first(),db.prepare('SELECT id,name,x,y,level,hp FROM players WHERE last_seen>? AND id!=? LIMIT 40').bind(now-15000,id).all(),db.prepare('SELECT * FROM monsters').all(),db.prepare('SELECT id,name,body FROM messages ORDER BY id DESC LIMIT 30').all()]);
  const {id:secret,...safe}:any=player;return {player:safe,peers:peers.results.map((p:any)=>({...p,id:p.id.slice(-10)})),monsters:monsters.results,chat:chat.results.reverse(),time:now};
 }
-export async function GET(req:Request){try{const {db,id,cookie}=await identity(req);return json(await world(db,id),200,cookie?{'Set-Cookie':cookie}:{});}catch(e){console.error('Game load failed',e);return json({error:'Không thể kết nối tiên giới. Vui lòng thử lại.'},503);}}
+export async function GET(req:Request){try{await ensurePlayable(req);const {db,id,cookie}=await identity(req);return json(await world(db,id),200,cookie?{'Set-Cookie':cookie}:{});}catch(e){if(e instanceof AdminError)return json({error:e.message},e.status);console.error('Game load failed',e);return json({error:'Không thể kết nối tiên giới. Vui lòng thử lại.'},503);}}
 export async function POST(req:Request){
  try{
- const origin=req.headers.get('origin');if(origin&&origin!==new URL(req.url).origin)return json({error:'Yêu cầu không hợp lệ.'},403);
- const body:any=await req.json();const {db,id,p,cookie}=await identity(req);const now=Date.now();let notice='';let hits:any[]=[];
+ const origin=req.headers.get('origin');if(origin&&origin!==requestOrigin(req))return json({error:'Yêu cầu không hợp lệ.'},403);
+ const body:any=await req.json();await ensurePlayable(req,body.action==='chat');const {db,id,p,cookie}=await identity(req);const now=Date.now();let notice='';let hits:any[]=[];
  const elapsed=Math.max(0,Math.min(20,(now-p.last_seen)/1000));
  const old={x:p.x,y:p.y};const proposed=boundedPosition(Number.isFinite(body.x)?body.x:p.x,Number.isFinite(body.y)?body.y:p.y);const distance=Math.hypot(proposed.x-old.x,proposed.y-old.y);const limit=230*Math.max(.1,elapsed)+35;
  if(distance>limit){proposed.x=old.x+(proposed.x-old.x)*limit/distance;proposed.y=old.y+(proposed.y-old.y)*limit/distance;}

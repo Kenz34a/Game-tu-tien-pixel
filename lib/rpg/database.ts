@@ -1,3 +1,4 @@
+import {requestOrigin,secureRequest} from '@/lib/request-origin';
 import {upgrade} from './immortal';
 import {gameDb} from '@/lib/game-db';
 import {newProfile,makeItem,stats,type Profile,type Item} from './model';
@@ -5,7 +6,7 @@ import {CURRENCIES,WORLD_BOSSES} from './catalog';
 export class GameError extends Error {}
 export const db=()=>gameDb();
 export type Session={id:string;cookie:string;profile:Profile;version:number;lastSeen:number};
-export async function actor(req:Request){let id=req.headers.get('cookie')?.match(/(?:^|;\s*)vt_session=([a-f0-9-]{36})/)?.[1];let cookie='';if(!id){id=crypto.randomUUID();cookie=`vt_session=${id}; Path=/; HttpOnly; SameSite=Lax; Max-Age=31536000${new URL(req.url).protocol==='https:'?'; Secure':''}`;}return{id,cookie};}
+export async function actor(req:Request){let id=req.headers.get('cookie')?.match(/(?:^|;\s*)vt_session=([a-f0-9-]{36})/)?.[1];let cookie='';if(!id){id=crypto.randomUUID();cookie=`vt_session=${id}; Path=/; HttpOnly; SameSite=Lax; Max-Age=31536000${secureRequest(req)?'; Secure':''}`;}return{id,cookie};}
 async function hashKey(value:string){const b=await crypto.subtle.digest('SHA-256',new TextEncoder().encode(value));return Array.from(new Uint8Array(b)).map(x=>x.toString(16).padStart(2,'0')).join('').slice(0,32);}
 export async function session(req:Request):Promise<Session>{const {id,cookie}=await actor(req);let row:any=await db().prepare('SELECT * FROM rpg_profiles WHERE id=?').bind(id).first();if(!row){const old:any=await db().prepare('SELECT * FROM players WHERE id=?').bind(id).first();const p=newProfile(old||{});const uid=await hashKey(id+':weapon'),chest=await hashKey(id+':chest'),head=await hashKey(id+':head');const items=[makeItem('weapon',old?.equipment?1:0,1,uid),makeItem('chest',0,1,chest),makeItem('head',0,1,head)];p.inventory=items;p.equipped={weapon:uid,chest};const st=stats(p);p.hp=st.hp;p.mp=st.mp;await db().batch([db().prepare('INSERT OR IGNORE INTO rpg_profiles(id,data,name,power,realm,map_id,last_seen) VALUES(?,?,?,?,?,?,?)').bind(id,JSON.stringify(p),p.name,st.power,p.realm,p.mapId,Date.now()),...CURRENCIES.map(c=>db().prepare('INSERT OR IGNORE INTO rpg_wallets(id,owner,currency,balance) VALUES(?,?,?,?)').bind(id+':'+c.id,id,c.id,p.coins[c.id])),...items.map(item=>db().prepare('INSERT OR IGNORE INTO rpg_items(uid,owner,data,equipped_slot) VALUES(?,?,?,?)').bind(item.uid,id,JSON.stringify(item),item.slot==='head'?null:item.slot))]);row=await db().prepare('SELECT * FROM rpg_profiles WHERE id=?').bind(id).first();}
  const profile=await hydrate(id,JSON.parse(row.data));return{id,cookie,profile,version:row.version,lastSeen:row.last_seen};}

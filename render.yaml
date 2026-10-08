@@ -1,15 +1,19 @@
 services:
   - type: web
     name: van-thien-ky
-    runtime: docker
+    runtime: node
     plan: starter
+    buildCommand: npm ci --include=dev --include=optional --no-audit --no-fund && npm run check && npm run build:render
+    startCommand: npm run start:neon
     healthCheckPath: /api/health
     envVars:
-      - key: PORT
-        value: 8787
-      - key: RPG_STATE_DIR
-        value: /var/data/rpg
-    disk:
-      name: cultivation-state
-      mountPath: /var/data
-      sizeGB: 1
+      - key: NODE_VERSION
+        value: 22.22.0
+      - key: NODE_ENV
+        value: production
+      - key: RPG_RUNTIME
+        value: node
+      - key: DATABASE_URL
+        sync: false
+      - key: ADMIN_PASSWORD
+        sync: false

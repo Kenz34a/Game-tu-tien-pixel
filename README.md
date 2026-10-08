@@ -146,11 +146,11 @@ Chiêu thức có 24 biến thể cho 6 môn phái × 4 chiêu: pháp ấn khi x
 node /tmp/titles-test.mjs
 ```
 
-## Triển khai Docker / Render
+## Triển khai Docker với SQLite (tùy chọn)
 
 Dockerfile mới build đúng thư mục `dist`; không sao chép `/app/release` hoặc `server-build` không tồn tại. Máy chủ dùng Node 22, áp dụng migration trước khi chạy, nghe trên `0.0.0.0:$PORT`, kiểm tra sức khỏe tại `/api/health` và lưu SQLite theo `RPG_STATE_DIR`.
 
-Trên Render, chọn repository này và nhánh `main`, dùng runtime **Docker**, Dockerfile `./Dockerfile`. Với dịch vụ đã có, cập nhật các thiết lập tương ứng và deploy commit mới. Gắn persistent disk tại `/var/data`, đặt `RPG_STATE_DIR=/var/data/rpg`. File `render.yaml` cung cấp Blueprint cho một dịch vụ có disk; nó chọn gói Starter có phí vì persistent disk cần gói trả phí. Chưa có thao tác tạo dịch vụ hay thu phí được thực hiện từ repository.
+Để triển khai Render với Neon, dùng Blueprint Node trong `render.yaml` và làm theo [hướng dẫn Render + Neon](docs/RENDER-NEON-ADMIN.md). Dockerfile vẫn dành cho bản SQLite tự lưu trữ; cấu hình này cần ổ đĩa bền vững và `RPG_STATE_DIR`.
 
 Giữ một instance dùng disk này; các instance với SQLite riêng không chia sẻ tiến trình. Không dùng ổ đĩa tạm để giữ nhân vật qua deploy. Có thể kiểm tra Docker tại máy cá nhân bằng:
 
@@ -170,3 +170,11 @@ Camera theo nhân vật trên máy tính và điện thoại; giới hạn di ch
 Nhân vật dùng các tư thế toàn thân cho bước chân và vung kiếm; các lớp khác/NPC chuyển động theo khớp vai, hông với điểm nối chồng dưới thân áo. Không uốn hình theo từng dải ngang. Đứng yên thở nhẹ với chân chạm đất; đánh có lấy đà, ra đòn và thu thế, hướng về mục tiêu, tạm dừng bước trong 620 ms ra chiêu. Người chơi và quái phản ứng khi trúng đòn; giảm chuyển động giữ tư thế tĩnh. Đây vẫn là sprite 2D; bộ hình hiện tại chưa có tư thế lưng riêng đầy đủ cho mọi lớp.
 
 Kiểm tra bổ sung: bundle/chạy `tests/map-layout.test.ts` như các bài TypeScript ở trên; sau khi chạy game local, `node tests/wide-maps-smoke.mjs` kiểm tra chiến đấu thật ở bãi xa, tiến độ loài, giới hạn tốc độ và vào/ra cổ cảnh. Bài smoke chỉ dùng hồ sơ `QA_CAMPS_` trong cơ sở dữ liệu phát triển.
+
+### Render + Neon và quản trị admin
+
+Xem [hướng dẫn thiết lập Render, Neon và bảng Thiên Chủ](docs/RENDER-NEON-ADMIN.md). Blueprint `render.yaml` hiện chạy Node.js với PostgreSQL Neon; bản `npm run play` trên máy vẫn dùng SQLite. Dashboard quản trị tại `/admin`, yêu cầu `ADMIN_PASSWORD` riêng trên máy chủ.
+
+### Tiến trình kỹ năng
+
+Tân thủ chỉ có chiêu cơ bản. Chiêu thứ hai mở ở cấp tu hành 5; chiêu thứ ba ở cấp 11 và cảnh giới thứ hai; tuyệt kỹ ở cấp 31 và cảnh giới thứ tư. Cấp tu hành = cảnh giới × 10 + tầng hiện tại. Mỗi cấp tăng thêm 1 điểm kỹ năng, mỗi lần lên cảnh giới cộng thêm 2 điểm. Thanh kỹ năng hiển thị điều kiện khóa và cho nâng từng chiêu tối đa 5 bậc, mỗi bậc thêm 12% sát thương. Máy chủ kiểm tra cả mở khóa, điểm nâng và hồi chiêu; tự chiến chỉ chọn chiêu đã mở. Tiến trình cũ không cần xóa và điểm được tính từ cấp tu hành hiện có.

@@ -1,3 +1,4 @@
+import {serverSettings} from './server-settings';
 import {worldBossPosition} from './map-layout';
 import {leaderboard,rankingHolders} from './leaderboard';
 import {db,initBosses,type Session} from './database';
@@ -21,7 +22,7 @@ export async function world(s:Session,extra:Record<string,unknown>={},lite=false
  const boards=lite?{}:await leaderboard(s);
  const viewPeers=peers.results.map(row=>{const pp=JSON.parse(row.data);return{id:row.id.slice(-8),name:row.name,x:pp.x,y:pp.y,classId:pp.classId,race:pp.race,root:pp.root,realm:pp.realm,star:pp.star,mountId:pp.mountId,titleId:pp.titleId?.startsWith('rank-')&&!holders.get(row.id)?.includes(pp.titleId)?null:pp.titleId,dharmaId:pp.dharmaId===undefined?-1:pp.dharmaId,dharmaLevel:pp.dharmaLevel||1,claimed:(pp.claimed||[]).filter((id:string)=>id.startsWith('s-'))};});
  const worldBosses=bosses.results.map(b=>({...WORLD_BOSSES.find(x=>x.id===b.id),hp:b.hp,respawnAt:b.respawn_at,cycle:b.cycle,...worldBossPosition(WORLD_BOSSES.find(x=>x.id===b.id)!.map),boss:true,worldBoss:true}));
- return{profile:p,stats:stats(p),map:MAPS[p.mapId],npcs:NPCS.filter(n=>n.map===p.mapId),enemies:enemiesFor(p,now),worldBosses,peers:viewPeers,messages:messages.results.reverse(),online:online?.count||1,...team,
+ return{server:await serverSettings(),profile:p,stats:stats(p),map:MAPS[p.mapId],npcs:NPCS.filter(n=>n.map===p.mapId),enemies:enemiesFor(p,now),worldBosses,peers:viewPeers,messages:messages.results.reverse(),online:online?.count||1,...team,
  ...(!lite?{market:listings.results.map(l=>({id:l.id,mine:l.owner===s.id,seller:l.seller_name,item:JSON.parse(l.item_data),currency:l.currency,price:l.price})),rankings:rankings.results.map((r,i)=>({rank:i+1,name:r.name,power:r.power,realm:r.realm,star:JSON.parse(r.data).star,me:r.id===s.id})),guilds:guilds.results,membership:membership.results,listed:listed.results.map(r=>r.item_uid),bossRewards:rewards.results.map(r=>({bossId:r.boss_id,damage:r.damage,cycle:r.cycle})),titles:availableTitles(p),questProgress:Object.fromEntries(QUESTS.filter(q=>p.accepted.includes(q.id)).map(q=>[q.id,questProgress(p,q)]))}:{}),
  ...boards,resources:resourceNodes(p.mapId),chance:Math.min(.99,successChance(p)+Math.min(.16,(p.cooldowns.pity||0)*.02)),nextXp:nextXp(p),events:{tide:tideActive(now),insight:insightActive(now)},counts:CATALOG_COUNTS,time:now,...extra};
 }

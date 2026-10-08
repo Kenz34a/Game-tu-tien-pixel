@@ -13,6 +13,10 @@ jobs:
           cache: npm
       - run: npm run install:ci
       - run: npm run check
+      - name: Skill progression regressions
+        run: |
+          ./node_modules/.bin/esbuild tests/skill-progression.test.ts --bundle --platform=node --format=esm --outfile=/tmp/skills-test.mjs
+          node /tmp/skills-test.mjs
       - name: Story and secret progression regressions
         run: |
           ./node_modules/.bin/esbuild tests/map-layout.test.ts --bundle --platform=node --format=esm --outfile=/tmp/map-layout-test.mjs
@@ -42,3 +46,31 @@ jobs:
           node tests/quest-journal-smoke.mjs
           node tests/starter-tail-smoke.mjs
           node tests/wide-maps-smoke.mjs
+  postgres-admin:
+    runs-on: ubuntu-latest
+    services:
+      postgres:
+        image: postgres:17-alpine
+        env:
+          POSTGRES_USER: rpg
+          POSTGRES_DB: rpg_test
+          POSTGRES_HOST_AUTH_METHOD: trust
+        ports: ['5432:5432']
+        options: >-
+          --health-cmd "pg_isready -U rpg -d rpg_test"
+          --health-interval 5s --health-timeout 5s --health-retries 10
+    env:
+      DATABASE_URL: postgresql://rpg@localhost:5432/rpg_test?sslmode=disable
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: npm
+      - run: npm run install:ci
+      - run: npm run check
+      - run: |
+          ./node_modules/.bin/esbuild tests/postgres-sql.test.ts --bundle --platform=node --format=esm --outfile=/tmp/postgres-sql-test.mjs
+          node /tmp/postgres-sql-test.mjs
+      - run: npm run build:render
+      - run: node tests/postgres-admin-smoke.mjs

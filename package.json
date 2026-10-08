@@ -15,7 +15,10 @@
     "check": "tsc --noEmit",
     "db:migrate": "node --import ./scripts/sites-env.mjs ./node_modules/wrangler/bin/wrangler.js d1 migrations apply DB --local --config wrangler.jsonc --persist-to .wrangler/state",
     "db:import": "python3 scripts/import-snapshot.py",
-    "play": "node scripts/play-local.mjs"
+    "play": "node scripts/play-local.mjs",
+    "build:render": "node scripts/build-render.mjs",
+    "start:neon": "node scripts/start-neon.mjs",
+    "db:migrate:postgres": "node scripts/migrate-postgres.mjs"
   },
   "dependencies": {
     "@base-ui/react": "^1.7.0",
@@ -31,6 +34,7 @@
     "lucide-react": "^1.31.0",
     "next": "16.3.4",
     "next-themes": "^0.4.6",
+    "pg": "^8.23.1",
     "radix-ui": "^1.6.7",
     "react": "19.2.6",
     "react-day-picker": "^10.0.1",
@@ -48,6 +52,7 @@
     "@cloudflare/workers-types": "4.20260515.1",
     "@tailwindcss/postcss": "4.2.1",
     "@types/node": "22.19.19",
+    "@types/pg": "^8.23.1",
     "@types/react": "19.2.14",
     "@types/react-dom": "19.2.3",
     "@vitejs/plugin-react": "6.0.2",
