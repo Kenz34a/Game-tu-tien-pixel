@@ -1,4 +1,5 @@
 'use client';
+import {RegionMap} from './region-map';
 import {MeridianPanel} from './meridian-panel';
 import {EncyclopediaPanel} from './encyclopedia-panel';
 import {SettingsPanel} from './preferences';
@@ -33,7 +34,7 @@ export function Panels(props:Props){const {panel,data,act,busy,open,npc,tick}=pr
  if(panel==='menu')return <><div className="r-menu-grid">{MENU.map(m=><button key={m.id} className="r-menu-card" onClick={()=>open(m.id)}><PixelIcon name={m.icon}/><strong>{m.label}</strong><p>{m.description}</p><span>→</span></button>)}</div><p className="r-note">Mỗi bước tu hành được lưu tự động. Các cõi mở theo cảnh giới của đạo hữu.</p></>;
  if(panel==='character')return <Character {...props}/>;
  if(panel==='inventory')return <Inventory {...props}/>;
- if(panel==='maps')return <Maps {...props}/>;
+ if(panel==='maps')return <RegionMap data={data} world={<Maps {...props}/>}/>;
  if(panel==='quests')return <Quests {...props}/>;
  if(panel==='cultivation')return <Cultivation {...props}/>;
  if(panel==='companions')return <Companions {...props}/>;

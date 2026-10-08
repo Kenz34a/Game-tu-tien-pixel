@@ -15,8 +15,8 @@ function drawResource(c:CanvasRenderingContext2D,x:number,y:number,type:string,t
 }
 export type Point={x:number;y:number};
 export type SceneTarget={kind:'npc'|'resource'|'enemy'|'ground';id:string|number;x:number;y:number};
-export function GameCanvas({dataRef,position,paused,target,effects,preferences,onSelect,onArrive}:{dataRef:MutableRefObject<any>;position:MutableRefObject<Point>;paused:boolean;target:MutableRefObject<string>;effects:MutableRefObject<any[]>;preferences:Preferences;onSelect:(t:SceneTarget)=>void;onArrive:(t:SceneTarget)=>void}){
- const ref=useRef<HTMLCanvasElement>(null),navigate=useRef<SceneTarget|null>(null),prefs=useRef(preferences),pause=useRef(paused),select=useRef(onSelect),arrive=useRef(onArrive);
+export function GameCanvas({navigate,dataRef,position,paused,target,effects,preferences,onSelect,onArrive}:{navigate:MutableRefObject<SceneTarget|null>;dataRef:MutableRefObject<any>;position:MutableRefObject<Point>;paused:boolean;target:MutableRefObject<string>;effects:MutableRefObject<any[]>;preferences:Preferences;onSelect:(t:SceneTarget)=>void;onArrive:(t:SceneTarget)=>void}){
+ const ref=useRef<HTMLCanvasElement>(null),prefs=useRef(preferences),pause=useRef(paused),select=useRef(onSelect),arrive=useRef(onArrive);
  prefs.current=preferences;pause.current=paused;select.current=onSelect;arrive.current=onArrive;
  useEffect(()=>{const canvas=ref.current,ctx=canvas?.getContext('2d');if(!canvas||!ctx)return;let raf=0,last=0,width=1,height=1,transform={scale:1,x:0,y:0},facing='front',moving=false;const keys=new Set<string>(),images:Record<string,HTMLImageElement>={};for(const [key,src] of Object.entries({courtyard:'/rpg/courtyard.webp',lower:'/rpg/lower.webp',immortal:'/rpg/immortal.webp',divine:'/rpg/divine.webp'})){const img=new Image();img.src=src;images[key]=img;}
  const resize=()=>{const box=canvas.getBoundingClientRect();width=box.width;height=box.height;const dpr=Math.min(devicePixelRatio,2);canvas.width=Math.round(width*dpr);canvas.height=Math.round(height*dpr);};const observer=new ResizeObserver(resize);observer.observe(canvas);resize();

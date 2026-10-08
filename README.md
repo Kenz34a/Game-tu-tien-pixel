@@ -116,3 +116,13 @@ node /tmp/expansion-test.mjs
 ./node_modules/.bin/esbuild tests/meridians-codex.test.ts --bundle --platform=node --format=esm --outfile=/tmp/meridians-codex-test.mjs
 node /tmp/meridians-codex-test.mjs
 ```
+
+## Sơn hà đồ và trò chuyện
+
+Bản đồ có hai chế độ Giang hồ/Khu vực. Khu vực hiển thị vị trí nhân vật, NPC, tài nguyên, cơ duyên, yêu thú còn sống và người chơi đang hiện diện; có phóng to, về vị trí bản thân, xem mục tiêu và đi tới NPC/tài nguyên/yêu thú bằng cơ chế di chuyển hiện tại. Dấu yêu thú tôn trọng tiến độ mở khóa map đầu.
+
+Chat có bộ lọc Tất cả/Thế giới/Gần Đây/Tổ đội/Tông môn, giờ gửi, biểu cảm, mở rộng/thu gọn và số tin chưa đọc ở các kênh khác bộ lọc đang xem. Kênh Gần Đây chỉ đọc được trong cùng map; máy chủ kiểm tra thành viên khi gửi và đọc kênh tổ đội/tông môn. Tiên báo vinh danh lần đầu hạ boss thường và khi vượt thiên kiếp sang cảnh giới mới.
+
+### Kiểm tra chat nhiều người chơi
+
+Sau khi migrate và khởi động ứng dụng cục bộ trên cổng 8787, chạy `node tests/chat-smoke.mjs`. Bài kiểm tra tạo các nhân vật có tên bắt đầu bằng `QA_MAPCHAT_`, kiểm tra kênh thế giới, Gần Đây theo map, quyền đọc chat tổ đội/tông môn và thời gian gửi. Chỉ chạy với cơ sở dữ liệu phát triển; hồ sơ kiểm tra được giữ lại để chẩn đoán.

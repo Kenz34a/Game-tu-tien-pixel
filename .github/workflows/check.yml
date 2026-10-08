@@ -23,3 +23,13 @@ jobs:
           node /tmp/meridians-codex-test.mjs
       - run: npm run build
       - run: npm run db:migrate
+      - name: Authenticated chat smoke test
+        run: |
+          npm start >/tmp/rpg-smoke-server.log 2>&1 &
+          rpg_server_pid=$!
+          trap 'kill "$rpg_server_pid" 2>/dev/null || true' EXIT
+          for attempt in $(seq 1 20); do
+            if curl --fail --silent http://localhost:8787/api/rpg >/dev/null; then break; fi
+            sleep 1
+          done
+          node tests/chat-smoke.mjs

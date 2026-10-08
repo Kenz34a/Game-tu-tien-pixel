@@ -7,7 +7,7 @@ export async function world(s:Session,extra:Record<string,unknown>={},lite=false
  await initBosses();const p=s.profile,now=Date.now(),empty=()=>Promise.resolve({results:[] as any[]});
  const [peers,messages,bosses,listings,rankings,guilds,membership,listed,rewards,team,online]=await Promise.all([
  db().prepare('SELECT id,name,map_id,realm,data FROM rpg_profiles WHERE map_id=? AND last_seen>? AND id!=? LIMIT 60').bind(p.mapId,now-25000,s.id).all<any>(),
- db().prepare("SELECT id,name,body,map_id,channel FROM rpg_messages WHERE channel=? AND (?='world' OR (?='party' AND scope=(SELECT party_id FROM rpg_party_members WHERE owner=?)) OR (?='sect' AND scope=(SELECT guild_id FROM rpg_members WHERE owner=? AND kind='sect'))) ORDER BY id DESC LIMIT 35").bind(p.chatChannel,p.chatChannel,p.chatChannel,s.id,p.chatChannel,s.id).all<any>(),
+ db().prepare("SELECT id,name,body,map_id,channel,created_at FROM rpg_messages WHERE channel IN ('world','system') OR (channel='nearby' AND map_id=?) OR (channel='party' AND scope=(SELECT party_id FROM rpg_party_members WHERE owner=?)) OR (channel='sect' AND scope=(SELECT guild_id FROM rpg_members WHERE owner=? AND kind='sect')) ORDER BY id DESC LIMIT 80").bind(p.mapId,s.id,s.id).all<any>(),
  db().prepare('SELECT * FROM rpg_world_bosses').all<any>(),
  lite?empty():db().prepare("SELECT id,owner,seller_name,item_data,currency,price FROM rpg_listings WHERE status='open' ORDER BY created_at DESC LIMIT 80").all<any>(),
  lite?empty():db().prepare('SELECT id,name,power,realm,data FROM rpg_profiles ORDER BY power DESC,id ASC LIMIT 100').all<any>(),
