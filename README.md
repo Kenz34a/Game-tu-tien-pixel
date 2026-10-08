@@ -103,3 +103,16 @@ node /tmp/expansion-test.mjs
 ```
 
 Đây là bản mở rộng gameplay và giao diện, chưa có kết quả kiểm thử tải đông người. Để mở cộng đồng cần triển khai máy chủ hoạt động liên tục và đo tải API/D1; số lượng nội dung không thay thế kiểm thử vận hành.
+
+## Động Khiếu và Bách Khoa
+
+**Động Khiếu** có 6 nhánh, mỗi nhánh 18 khiếu: Khí Hải tăng linh lực, Kinh Mạch tăng tốc độ, Tứ Chi tăng công kích, Ngũ Tạng tăng khí huyết, Thần Đình tăng bạo kích và Mệnh Môn tăng phòng ngự. Khiếu đầu cần Luyện Khí 2 tinh; các khiếu tiếp theo yêu cầu bậc tu hành cao hơn. Kinh nghiệm riêng nhận từ điều tức (+8), quái thường (+3), boss thường (+18), nhiệm vụ (+8, ẩn +15) và thưởng cổ cảnh tổ đội (+25). Khai khiếu dùng kinh nghiệm, linh thạch và tinh phách ở tầng cao; máy chủ kiểm tra toàn bộ điều kiện trước khi trừ tài nguyên.
+
+Đủ 24 khiếu mở một tuyến chủ đạo: Kiếm Ý tăng 3% công, Kim Thân tăng 3% khí huyết hoặc Tụ Linh tăng 3% linh lực. Đổi tuyến miễn phí, chỉ một tuyến có hiệu lực. Dữ liệu được lưu trong profile; nhân vật cũ tự được thêm các nhánh ở mức 0, không mất tiến trình.
+
+**Bách Khoa** có 8 nhóm: nhân vật, quái vật, vùng đất, vật phẩm, võ học, thế lực, bí ẩn và chỉ dẫn. Bố cục gồm nhóm, danh sách tìm kiếm/phân trang và trang chi tiết có hình, gốc gác, dữ liệu và liên kết tới chức năng liên quan. Tìm kiếm chấp nhận tiếng Việt không dấu. Trạng thái xác minh theo hoạt động của nhân vật; truyện cơ duyên chỉ hiển thị sau khi khám phá. Số liệu lấy từ catalog game, không tạo NPC, quái hay vật phẩm giả để lấp danh sách.
+
+```sh
+./node_modules/.bin/esbuild tests/meridians-codex.test.ts --bundle --platform=node --format=esm --outfile=/tmp/meridians-codex-test.mjs
+node /tmp/meridians-codex-test.mjs
+```

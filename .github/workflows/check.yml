@@ -19,5 +19,7 @@ jobs:
           node /tmp/opening-story-test.mjs
           ./node_modules/.bin/esbuild tests/expansion.test.ts --bundle --platform=node --format=esm --outfile=/tmp/expansion-test.mjs
           node /tmp/expansion-test.mjs
+          ./node_modules/.bin/esbuild tests/meridians-codex.test.ts --bundle --platform=node --format=esm --outfile=/tmp/meridians-codex-test.mjs
+          node /tmp/meridians-codex-test.mjs
       - run: npm run build
       - run: npm run db:migrate
